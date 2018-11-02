@@ -3,7 +3,7 @@
 //
 
 #include "tcp_user_socket.h"
-#include <memory>
+#include "buffer.h"
 #include <cstring>
 #include <mutex>
 
@@ -17,7 +17,7 @@ void IRC_Server::TCP_User_Socket::setSocket(int sckt)
 }
 
 
-socklen_t IRC_Server::TCP_User_Socket::getLenghtPointer()
+socklen_t IRC_Server::TCP_User_Socket::getLengthPointer()
 {
     socklen_t len = sizeof(userAddress);
     return len;
@@ -41,24 +41,24 @@ void IRC_Server::TCP_User_Socket::setUserInfoIPv4(string address, uint16_t port)
 
 std::tuple<string,ssize_t> IRC_Server::TCP_User_Socket::recvString(int bufferSize, bool useMutex)
 {
-    char stringBuffer[bufferSize];
-    memset(stringBuffer, 0, sizeof(stringBuffer));    //change made here. Zeros out buffer.
+    Buffer stringBuffer(bufferSize);
+    stringBuffer.zero_out();
 
     ssize_t recvMsgSize;
 
     if (useMutex)
     {
         lock_guard<mutex> lock(recvMutex);
-        recvMsgSize = recv(userSocket, stringBuffer, bufferSize, 0);
+        recvMsgSize = recv(userSocket, stringBuffer.get_buffer(), bufferSize, 0);
     }
     else
     {
-        recvMsgSize = recv(userSocket, stringBuffer, bufferSize, 0);
+        recvMsgSize = recv(userSocket, stringBuffer.get_buffer(), bufferSize, 0);
     }
 
 
 
-    return make_tuple(string(stringBuffer),recvMsgSize);
+    return make_tuple(string(stringBuffer.get_buffer()),recvMsgSize);
 }
 
 

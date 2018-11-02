@@ -55,3 +55,20 @@ void IRC_Server::TCP_Server_Socket::set_socket_options()
     int optval = 1;
     setsockopt(this->server_socket, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
 }
+
+std::tuple<std::shared_ptr<IRC_Server::TCP_User_Socket>,int> IRC_Server::TCP_Server_Socket::acceptSocket()
+{
+    std::shared_ptr<IRC_Server::TCP_User_Socket> userSocket = make_shared<IRC_Server::TCP_User_Socket>();
+    socklen_t len = userSocket.get()->getLengthPointer();
+    int client_fd = accept(server_socket, (struct sockaddr*)userSocket.get()->getAddressPointer(), &len);
+    userSocket.get()->setSocket(client_fd);
+
+    char userIPv4[16];
+    sockaddr_in* userAddress = (sockaddr_in*) userSocket.get()->getAddressPointer();
+    inet_ntop(AF_INET, &(userAddress->sin_addr), userIPv4, INET_ADDRSTRLEN);
+
+    auto clientPort = ntohs(userAddress->sin_port);
+    userSocket.get()->setUserInfoIPv4(std::string(userIPv4), clientPort);
+
+    return make_tuple(userSocket, client_fd);
+}

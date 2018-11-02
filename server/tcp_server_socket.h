@@ -2,14 +2,16 @@
 // Created by ikegentz on 10/25/18.
 //
 
-#ifndef CS457_TCP_SOCKET_H
-#define CS457_TCP_SOCKET_H
+#ifndef CS457_TCP_SERVER_SOCKET_H
+#define CS457_TCP_SOCKET_SERVER_H
 
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <string>
 #include <iostream>
-#include "tcp_server_socket.h"
+#include <memory>
+
+#include "tcp_user_socket.h"
 
 namespace IRC_Server
 {
@@ -21,6 +23,7 @@ namespace IRC_Server
         int init();
         int bind_socket();
         int listen_socket();
+        std::tuple<std::shared_ptr<IRC_Server::TCP_User_Socket>,int> acceptSocket();
 
     private:
         void set_socket_options();

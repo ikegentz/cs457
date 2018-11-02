@@ -27,7 +27,7 @@ namespace IRC_Server
         TCP_User_Socket();
         void setSocket(int skct);
         struct sockaddr *getAddressPointer();
-        socklen_t getLenghtPointer();
+        socklen_t getLengthPointer();
         int getSocket();
         int closeSocket();
         std::tuple <string, ssize_t> recvString(int bufferSize = 4096, bool useMutex = true);
