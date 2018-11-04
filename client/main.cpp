@@ -5,6 +5,9 @@
 #include <unistd.h>
 #include <iostream>
 
+#include "tcp_client_socket.h"
+
+
 namespace IRC_Client
 {
     const std::string DEFAULT_HOSTNAME = "localhost";
@@ -61,6 +64,8 @@ int main(int argc, char **argv)
     char selected_opt = '.';
     char* arg;
 
+
+    std::cout << "ARGS: ";
     while ((opt = getopt(argc, argv, "h:u:p:c:t:L:")) != -1)
     {
         switch(opt) {
@@ -97,8 +102,35 @@ int main(int argc, char **argv)
                 std::cout << IRC_Client::usage() << std::endl;
                 exit(1);
         }
+        std::cout << ", " << arg;
     }
+    std::cout << std::endl;
 
     std::cout << "Starting the client..." << std::endl;
+
+    std::string serverIP("127.0.0.1");
+    int port = 1997;
+    IRC_Client::TCPClientSocket clientSocket(serverIP,port);
+
+    int val = clientSocket.connectSocket();
+    std::cout << "Client Socket Value after connect = " << val << std::endl;
+//
+//    clientSocket.sendString("Hello Server. How are you? ",false);
+//
+//    string msg;
+//    ssize_t v;
+//    tie(msg,v) =  clientSocket.recvString(4096,false);
+//    cout << "server said: " << msg << endl;
+//
+//    cout << "Client will try to exit now" <<endl;
+//
+//    clientSocket.sendString("EXIT",false);
+//
+//    tie(msg,v) =  clientSocket.recvString(4096,false);
+//    cout << "server said: " << msg << endl;
+//
+//    clientSocket.closeSocket();
+
+    return 0;
 
 }
