@@ -11,7 +11,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ec64dd51-a756-4345-9136-36de6f5ef36a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/client/main.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,38 +23,38 @@
     <session id="-1576049364">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="6" />
+          <entry key="project.closed" value="7" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.6" value="1" />
-          <entry key="project.open.time.7" value="2" />
+          <entry key="project.open.time.7" value="3" />
           <entry key="project.open.time.8" value="2" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.opened" value="8" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="Makefile" value="12" />
-          <entry key="cpp" value="14" />
-          <entry key="h" value="9" />
+          <entry key="Makefile" value="14" />
+          <entry key="cpp" value="15" />
+          <entry key="h" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="ObjectiveC" value="23" />
-          <entry key="PLAIN_TEXT" value="12" />
+          <entry key="ObjectiveC" value="25" />
+          <entry key="PLAIN_TEXT" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="537" />
-          <entry key="cpp" value="9402" />
+          <entry key="cpp" value="9744" />
           <entry key="h" value="1001" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="10403" />
+          <entry key="ObjectiveC" value="10745" />
           <entry key="PLAIN_TEXT" value="537" />
         </counts>
       </usages-collector>
@@ -102,8 +101,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-393">
-              <caret line="115" column="39" lean-forward="true" selection-start-line="115" selection-start-column="39" selection-end-line="115" selection-end-column="39" />
+            <state relative-caret-position="533">
+              <caret line="129" column="88" selection-start-line="129" selection-start-column="88" selection-end-line="129" selection-end-column="88" />
             </state>
           </provider>
         </entry>
@@ -314,18 +313,19 @@
       <workItem from="1541351238546" duration="3804000" />
       <workItem from="1541443929474" duration="337000" />
       <workItem from="1541448345746" duration="2390000" />
-      <workItem from="1541453256420" duration="5269000" />
+      <workItem from="1541453256420" duration="5300000" />
+      <workItem from="1541458944918" duration="563000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="35746000" />
+    <option name="totallyTimeSpent" value="36340000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="940" y="0" width="980" height="1053" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21841542" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22376874" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -440,8 +440,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-393">
-          <caret line="115" column="39" lean-forward="true" selection-start-line="115" selection-start-column="39" selection-end-line="115" selection-end-column="39" />
+        <state relative-caret-position="533">
+          <caret line="129" column="88" selection-start-line="129" selection-start-column="88" selection-end-line="129" selection-end-column="88" />
         </state>
       </provider>
     </entry>

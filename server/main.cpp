@@ -121,12 +121,13 @@ namespace IRC_Server
         do
         {
             std::cin.getline(input_cstr, 256);
-            std::string input(input_cstr);
+            input = std::string(input_cstr);
 
             // convert command to all lowercase
             std::transform(input.begin(), input.end(), input.begin(), ::tolower);
-
-        } while (input.find("exit") != std::string::npos);
+        } while (input.find("exit") != 0); // 'exit' command was typed
+        std::cout << "[SERVER_COMANDLET] Shutting down the server." <<
+        " Currently connected users will have their chat session dropped!" << std::endl;
     }
 }
 
