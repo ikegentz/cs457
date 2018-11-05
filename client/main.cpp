@@ -114,22 +114,22 @@ int main(int argc, char **argv)
 
     int val = clientSocket.connectSocket();
     std::cout << "Client Socket Value after connect = " << val << std::endl;
-//
-//    clientSocket.sendString("Hello Server. How are you? ",false);
-//
-//    string msg;
-//    ssize_t v;
-//    tie(msg,v) =  clientSocket.recvString(4096,false);
-//    cout << "server said: " << msg << endl;
-//
-//    cout << "Client will try to exit now" <<endl;
-//
-//    clientSocket.sendString("EXIT",false);
-//
-//    tie(msg,v) =  clientSocket.recvString(4096,false);
-//    cout << "server said: " << msg << endl;
-//
-//    clientSocket.closeSocket();
+
+    clientSocket.sendString("Hello Server. How are you? ",false);
+
+    std::string msg;
+    ssize_t v;
+    tie(msg,v) =  clientSocket.recvString(4096,false);
+    std::cout << "server said: " << msg << std::endl;
+
+    std::cout << "Client will try to exit now" << std::endl;
+
+    clientSocket.sendString("EXIT",false);
+
+    tie(msg,v) =  clientSocket.recvString(4096,false);
+    std::cout << "server said: " << msg << std::endl;
+
+    clientSocket.closeSocket();
 
     return 0;
 

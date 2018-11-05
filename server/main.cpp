@@ -5,6 +5,7 @@
 #include <thread>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 #include "tcp_server_socket.h"
 #include "tcp_user_socket.h"
@@ -58,8 +59,8 @@ namespace IRC_Server
             if(msg.substr(0,4) == "EXIT")
                 cont = false;
 
-            std::cout << "[SERVER] The client is sending message " << msg << " -- With value return = " << val << std::endl;
-            std::string s = "[SERVER REPLY] The client is sending message: " + msg + "\n";
+            std::cout << "[SERVER_CLIENT_LISTENER] The client is sending message " << msg << " -- With value return = " << val << std::endl;
+            std::string s = "[SERVER_CLIENT_LISTENER] The client is sending message: " + msg + "\n";
             thread childT1(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
 
             childT1.join();
@@ -84,8 +85,9 @@ namespace IRC_Server
         return 1;
     }
 
-    void process_and_wait(TCP_Server_Socket& serverSocket)
+    void process_and_wait(TCP_Server_Socket* serverSocketPointer)
     {
+        TCP_Server_Socket serverSocket = *serverSocketPointer;
         while(ready)
         {
             shared_ptr<IRC_Server::TCP_User_Socket> clientSocket;
@@ -106,8 +108,28 @@ namespace IRC_Server
 
         std::cout << "Server is shutting down after one client" << std::endl;
     }
+    void process_server_commands()
+    {
+        char input_cstr[256];
+        std::cout << "\n[SERVER_COMMANDLET] Type server commands here:" << std::endl;
+        std::cout << "\tEXIT - Shut down the server\n" <<
+                  "\tUSERS - List currently connected users\n" <<
+                  "\tCHANNELS - List channels and number of users\n" <<
+                  "\tKICK - Kick a user from the server" << std::endl;
 
+        std::string input;
+        do
+        {
+            std::cin.getline(input_cstr, 256);
+            std::string input(input_cstr);
+
+            // convert command to all lowercase
+            std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+
+        } while (input.find("exit") != std::string::npos);
+    }
 }
+
 
 int main(int argc, char **argv)
 {
@@ -137,7 +159,7 @@ int main(int argc, char **argv)
         }
     }
 
-    std::cout << "Starting the server..." << std::endl;
+    std::cout << "Starting the server...\n" << std::endl;
     IRC_Server::TCP_Server_Socket socket1(IRC_Server::DEFAULT_SERVER_PORT);
 
     if(socket1.init() != 0)
@@ -146,16 +168,22 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    std::cout << "Socket initialized, binding..." << std::endl;
+    std::cout << "[SERVER] Socket initialized, binding..." << std::endl;
     socket1.bind_socket();
 
-    std::cout << "Socket bound. Preparing to listen..." << std::endl;
+    std::cout << "[SERVER] Socket bound. Preparing to listen..." << std::endl;
     socket1.listen_socket();
 
-    std::cout << "Waiting for clients to connect..." << std::endl;
+    std::cout << "[SERVER] Waiting for clients to connect..." << std::endl;
 
-    IRC_Server::process_and_wait(socket1);
+    // we want to process clients, and accept commands concurrently
+    std::thread clientListener(IRC_Server::process_and_wait, &socket1);
+    std::thread serverCommandProcessor(IRC_Server::process_server_commands);
 
-    std::cout << "Shutting down server" << std::endl;
+    // handle client connections
+    clientListener.join();
+    // handle user input commands
+    serverCommandProcessor.join();
 
+    std::cout << "[SERVER] Shutting down server" << std::endl;
 }
