@@ -6,6 +6,8 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <mutex>
+#include <unordered_map>
 
 #include "tcp_server_socket.h"
 #include "tcp_user_socket.h"
@@ -16,6 +18,8 @@ namespace IRC_Server
     const static std::string DEFAULT_CONFPATH = "/conf";
     const static std::string DEFAULT_LOGPATH = "/logs";
     static std::vector<std::unique_ptr<thread>> threadList;
+    static std::unordered_map<int, std::shared_ptr<IRC_Server::TCP_User_Socket>> clientSockets;
+    std::mutex clientSockets_mutex;
     static bool ready = true;
     static bool still_running = true;
     static unsigned threadID = 0;
@@ -49,40 +53,88 @@ namespace IRC_Server
 
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, int id)
     {
-        std::cout << "Waiting for message from the client thread with ID " << id << "..." << std::endl;
         std::string msg;
         ssize_t val;
         bool cont = true;
 
-        // check if the server is still running
         while(cont)
         {
+            std::cout << std::endl;
+            // i think right here we might be blocking, so need to make this part gracefully shut down
             tie(msg, val) = clientSocket.get()->recvString();
-            if(msg.substr(0,4) == "EXIT")
-                cont = false;
+            std::cout << "[CLIENT_LISTENER] Recieved message from client: " << msg << " -- With recieved buffer size: " << val << " -- Processing..." << std::endl;
 
-            std::cout << "[SERVER_CLIENT_LISTENER] The client is sending message " << msg << " -- With value return = " << val << std::endl;
-            std::string s = "[SERVER_CLIENT_LISTENER] The client is sending message: " + msg + "\n";
-            thread childT1(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
-
-            childT1.join();
-
-            // I think this means you recieved a message from another server, in which case we shut this thread down...
-            if(msg.substr(0, 6) == "SERVER")
+            if(msg.substr(0,4) == "QUIT")
             {
-                thread childTExit(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "GOODBYE EVERYONE", false);
-                thread childTExit2(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "\n", false);
+                std::cout << "\tRecieved the 'QUIT' command from the client. Closing this client's connection..." << std::endl;
+                cont = false;
+                std::string s = "You are being disconnected per your request\n";
+                thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
+                sendThread.join();
+
+                std::lock_guard<std::mutex> guard(clientSockets_mutex);
+                clientSocket.get()->closeSocket();
+                std::cout << "\tSuccessfully closed the client" << std::endl;
+                std::cout << std::endl;
+                std::cout << "\t$";
+                return 0;
+            }
+            else if(msg.substr(0, 6) == "SERVER")
+            {
+                /*
+                 *    The server message is used to tell a server that the other end of a
+                       new connection is a server. This message is also used to pass server
+                       data over whole net.  When a new server is connected to net,
+                       information about it be broadcast to the whole network.  <hopcount>
+                       is used to give all servers some internal information on how far away
+                       all servers are.  With a full server list, it would be possible to
+                       construct a map of the entire server tree, but hostmasks prevent this
+                       from being done.
+
+                       The SERVER message must only be accepted from either (a) a connection
+                       which is yet to be registered and is attempting to register as a
+                       server, or (b) an existing connection to another server, in  which
+                       case the SERVER message is introducing a new server behind that
+                       server.
+
+                       Most errors that occur with the receipt of a SERVER command result in
+                       the connection being terminated by the destination host (target
+                       SERVER).  Error replies are usually sent using the "ERROR" command
+                       rather than the numeric since the ERROR command has several useful
+                       properties which make it useful here.
+
+                       If a SERVER message is parsed and attempts to introduce a server
+                       which is already known to the receiving server, the connection from
+                       which that message must be closed (following the correct procedures),
+                       since a duplicate route to a server has formed and the acyclic nature
+                       of the IRC tree broken.
+                 */
+                // See above comment (might be collapsed) why we exit here. In a nutshell, this creates a cycle, so
+                // one server must shut down
+                std::cout << "\tDetected another server. Shutting down to avoid cyclic behavior..." << std::endl;
+                thread childTExit(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "GOODBYE EVERYONE\n", false);
                 ready = false;
                 cont = false;
+                still_running = false;
                 childTExit.join();
-                childTExit2.join();
             }
             else
             {
-                std::cout << "Waiting for another message..." << std::endl;
+                // This is where we simply recieved a chat message. Broadcast to the channel...
+                std::cout << "\tRecieved general chat message. Sending to users in the channel..." << std::endl;
+                // send acknowledgement to client
+                std::string s = "Hello client, I am the server!\n";
+                thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
+                sendThread.join();
+                // send chat message to channel
+                std::cout << "\tWaiting for another message..." << std::endl;
             }
+
+            std::cout << std::endl;
+            std::cout << "\t$";
+
         }
-        clientSocket.get()->sendString("goodbye");
+        clientSocket.get()->sendString("Server shutting down. Goodbye!");
         clientSocket.get()->closeSocket();
         return 1;
     }
@@ -102,36 +154,44 @@ namespace IRC_Server
 
                 // check if the server is still running
                 if(!still_running)
-                    return;
+                    goto quitThreads;
             } while(val == -1);
 
-            std::cout << "Socket Accepted with file descriptor: " << val << std::endl;
-            std::cout << "Making new thread to handle this connection with ID: " << threadID << std::endl << std::endl;
-            unique_ptr<thread> t = make_unique<thread>(cclient, clientSocket, threadID);
+            std::cout << "[CLIENT_LISTENER] Making new thread to handle this connection with ID: " << threadID << std::endl << std::endl;
+
+            std::lock_guard<std::mutex> guard(clientSockets_mutex);
+            clientSockets[threadID] = clientSocket;
+
+            unique_ptr<thread> t = make_unique<thread>(cclient, clientSockets.find(threadID)->second, threadID);
             threadList.push_back(std::move(t));
             ++threadID;
         }
 
+        quitThreads:;
         for (auto& t : threadList)
         {
             t.get()->join();
         }
 
-        std::cout << "Server is shutting down after one client" << std::endl;
+        std::cout << "[CLIENT_LISTENER] Server shutting down, all clients disconnected" << std::endl;
     }
 
     void process_server_commands()
     {
-        char input_cstr[256];
-        std::cout << "\n[SERVER_COMMANDLET] Type server commands here:" << std::endl;
+        std::cout << "\n[COMMANDLET] Control the server" << std::endl;
         std::cout << "\tEXIT - Shut down the server\n" <<
                   "\tUSERS - List currently connected users\n" <<
                   "\tCHANNELS - List channels and number of users\n" <<
                   "\tKICK - Kick a user from the server" << std::endl;
 
+        std::cout << "\n\tType server commands here:";
+
+
+        char input_cstr[256];
         std::string input;
         do
         {
+            std::cout << "\n\t$ ";
             std::cin.getline(input_cstr, 256);
             input = std::string(input_cstr);
 
@@ -144,7 +204,7 @@ namespace IRC_Server
     void shutdown_server()
     {
         std::cout << "[SERVER_COMANDLET] Shutting down the server." <<
-                  " Current" << std::endl;
+                  " Current client connections will be closed." << std::endl;
 
     }
 }
