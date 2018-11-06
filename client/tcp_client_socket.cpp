@@ -14,9 +14,6 @@ IRC_Client::TCPClientSocket::TCPClientSocket(string networkAddress, uint portNum
     setSocketOptions();
 }
 
-
-
-
 void IRC_Client::TCPClientSocket::init()
 {
     //here I may have differences with server 

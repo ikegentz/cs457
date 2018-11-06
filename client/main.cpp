@@ -10,10 +10,12 @@
 
 namespace IRC_Client
 {
-    const std::string DEFAULT_HOSTNAME = "localhost";
-    const std::string DEFAULT_USERNAME = "chatterbox-charlie";
+    const std::string DEFAULT_HOSTNAME = "127.0.0.1";
+    const std::string DEFAULT_USERNAME = "loudmouth";
     const unsigned DEFAULT_SERVER_PORT = 1997;
     const std::string DEFAULT_LOGPATH = "client.log";
+    const std::string DEFAULT_CONFIG_PATH = "client.conf";
+    const std::string DEFAULT_TEST_PATH = "test.txt";
 
     std::string usage()
     {
@@ -62,36 +64,40 @@ int main(int argc, char **argv)
 
     int opt;
     char selected_opt = '.';
-    char* arg;
 
+    std::string serverIP = IRC_Client::DEFAULT_HOSTNAME;
+    int port = IRC_Client::DEFAULT_SERVER_PORT;
+    std::string username = IRC_Client::DEFAULT_USERNAME;
+    std::string config_filepath = IRC_Client::DEFAULT_CONFIG_PATH;
+    std::string test_filepath = IRC_Client::DEFAULT_TEST_PATH;
+    std::string log_filepath = IRC_Client::DEFAULT_LOGPATH;
 
-    std::cout << "ARGS: ";
     while ((opt = getopt(argc, argv, "h:u:p:c:t:L:")) != -1)
     {
         switch(opt) {
             case 'h':
                 selected_opt = 'h';
-                arg = optarg;
+                serverIP = optarg;
                 break;
             case 'u':
                 selected_opt = 'u';
-                arg = optarg;
+                username = optarg;
                 break;
             case 'p':
                 selected_opt = 'p';
-                arg = optarg;
+                port = std::stoi(optarg);
                 break;
             case 'c':
                 selected_opt = 'c';
-                arg = optarg;
+                config_filepath = optarg;
                 break;
             case 't':
                 selected_opt = 't';
-                arg = optarg;
+                test_filepath = optarg;
                 break;
             case 'L':
                 selected_opt = 'L';
-                arg = optarg;
+                log_filepath = optarg;
                 break;
             case 'H':
                 selected_opt = 'H';
@@ -102,18 +108,27 @@ int main(int argc, char **argv)
                 std::cout << IRC_Client::usage() << std::endl;
                 exit(1);
         }
-        std::cout << ", " << arg;
     }
     std::cout << std::endl;
 
-    std::cout << "Starting the client..." << std::endl;
+    std::cout << "[CLIENT] Starting the client..." << std::endl;
 
-    std::string serverIP("127.0.0.1");
-    int port = 1997;
+    std::cout << "HOST!!!!! " << serverIP << std::endl;
+
     IRC_Client::TCPClientSocket clientSocket(serverIP,port);
 
     int val = clientSocket.connectSocket();
-    std::cout << "Client Socket Value after connect = " << val << std::endl;
+    if(val == -1)
+    {
+        std::cerr << "[CLIENT] Couldn't connect to the server. Check hostname/IP and port" << std::endl;
+        exit(1);
+    }
+    std::cout << "[CLIENT] You are now connected to the server" << std::endl;
+
+
+
+
+    //main loop here
 
     clientSocket.sendString("Hello Server. How are you? ",false);
 
