@@ -69,7 +69,7 @@ namespace IRC_Server
 
             // we will have a timeout if we dont' hear anything. In that case, continue on and try again
             if(val > 0)
-                std::cout << "[CLIENT_LISTENER] Recieved message from client: " << msg << " -- With recieved buffer size: " << val << " -- Processing..." << std::endl;
+                std::cout << "\n[CLIENT_LISTENER] Recieved message from client: " << msg << " -- With recieved buffer size: " << val << " -- Processing..." << std::endl;
             else
                 continue;
 
@@ -85,7 +85,7 @@ namespace IRC_Server
                 std::lock_guard<std::mutex> guard(clientSockets_mutex);
                 clientSocket.get()->closeSocket();
                 std::cout << "\tSuccessfully closed the client\n" <<
-                std::cout << "\n\t $ ";
+                "\n\t $ ";
                 std::cout.flush();
                 return 0;
             }
