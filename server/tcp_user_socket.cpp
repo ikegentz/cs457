@@ -5,6 +5,7 @@
 #include "tcp_user_socket.h"
 #include "../utils/buffer.h"
 #include <cstring>
+#include <sys/fcntl.h>
 #include <mutex>
 
 using namespace std;
@@ -14,6 +15,13 @@ IRC_Server::TCP_User_Socket::TCP_User_Socket() {}
 void IRC_Server::TCP_User_Socket::setSocket(int sckt)
 {
     userSocket=sckt;
+
+    struct timeval tv;
+    tv.tv_sec = 1;
+    tv.tv_usec = 0;
+
+    // set a timeout so we don't get stuck receiving
+    setsockopt(userSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
 }
 
 

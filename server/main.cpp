@@ -57,12 +57,22 @@ namespace IRC_Server
         ssize_t val;
         bool cont = true;
 
+        // don't block, so that we can check read values and exit properly
+
         while(cont)
         {
-            std::cout << std::endl;
-            // i think right here we might be blocking, so need to make this part gracefully shut down
+            // check if the server is still running
+            if(!still_running)
+                cont = false;
+
             tie(msg, val) = clientSocket.get()->recvString();
-            std::cout << "[CLIENT_LISTENER] Recieved message from client: " << msg << " -- With recieved buffer size: " << val << " -- Processing..." << std::endl;
+
+            // we will have a timeout if we dont' hear anything. In that case, continue on and try again
+            if(val > 0)
+                std::cout << "[CLIENT_LISTENER] Recieved message from client: " << msg << " -- With recieved buffer size: " << val << " -- Processing..." << std::endl;
+            else
+                continue;
+
 
             if(msg.substr(0,4) == "QUIT")
             {
@@ -74,9 +84,9 @@ namespace IRC_Server
 
                 std::lock_guard<std::mutex> guard(clientSockets_mutex);
                 clientSocket.get()->closeSocket();
-                std::cout << "\tSuccessfully closed the client" << std::endl;
-                std::cout << std::endl;
-                std::cout << "\t$";
+                std::cout << "\tSuccessfully closed the client\n" <<
+                std::cout << "\n\t $ ";
+                std::cout.flush();
                 return 0;
             }
             else if(msg.substr(0, 6) == "SERVER")
@@ -127,11 +137,10 @@ namespace IRC_Server
                 thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
                 sendThread.join();
                 // send chat message to channel
-                std::cout << "\tWaiting for another message..." << std::endl;
+                std::cout << "\tWaiting for another message...\n" <<
+                "\n\t $ ";
+                std::cout.flush();
             }
-
-            std::cout << std::endl;
-            std::cout << "\t$";
 
         }
         clientSocket.get()->sendString("Server shutting down. Goodbye!");
