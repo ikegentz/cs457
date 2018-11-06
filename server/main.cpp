@@ -17,6 +17,7 @@ namespace IRC_Server
     const static std::string DEFAULT_LOGPATH = "/logs";
     static std::vector<std::unique_ptr<thread>> threadList;
     static bool ready = true;
+    static bool still_running = true;
     static unsigned threadID = 0;
 
     std::string usage()
@@ -53,6 +54,7 @@ namespace IRC_Server
         ssize_t val;
         bool cont = true;
 
+        // check if the server is still running
         while(cont)
         {
             tie(msg, val) = clientSocket.get()->recvString();
@@ -92,10 +94,19 @@ namespace IRC_Server
         {
             shared_ptr<IRC_Server::TCP_User_Socket> clientSocket;
             int val;
-            tie(clientSocket, val) = serverSocket.acceptSocket();
-            std::cout << "Value for accept is: " << val << std::endl;
-            std::cout << "Socket Accepted" << std::endl;
 
+            do
+            {
+                // made this non-blocking so we could check if server is still running
+                tie(clientSocket, val) = serverSocket.acceptSocket();
+
+                // check if the server is still running
+                if(!still_running)
+                    return;
+            } while(val == -1);
+
+            std::cout << "Socket Accepted with file descriptor: " << val << std::endl;
+            std::cout << "Making new thread to handle this connection with ID: " << threadID << std::endl << std::endl;
             unique_ptr<thread> t = make_unique<thread>(cclient, clientSocket, threadID);
             threadList.push_back(std::move(t));
             ++threadID;
@@ -108,6 +119,7 @@ namespace IRC_Server
 
         std::cout << "Server is shutting down after one client" << std::endl;
     }
+
     void process_server_commands()
     {
         char input_cstr[256];
@@ -126,8 +138,14 @@ namespace IRC_Server
             // convert command to all lowercase
             std::transform(input.begin(), input.end(), input.begin(), ::tolower);
         } while (input.find("exit") != 0); // 'exit' command was typed
+        still_running = false;
+    }
+
+    void shutdown_server()
+    {
         std::cout << "[SERVER_COMANDLET] Shutting down the server." <<
-        " Currently connected users will have their chat session dropped!" << std::endl;
+                  " Current" << std::endl;
+
     }
 }
 
@@ -181,10 +199,13 @@ int main(int argc, char **argv)
     std::thread clientListener(IRC_Server::process_and_wait, &socket1);
     std::thread serverCommandProcessor(IRC_Server::process_server_commands);
 
-    // handle client connections
-    clientListener.join();
-    // handle user input commands
+    // handle user input commands, wait until user decides to exit
     serverCommandProcessor.join();
+
+    IRC_Server::shutdown_server();
+
+    // We probably won't get here if exit is typed, since we forcefully shutdown threads
+    clientListener.join();
 
     std::cout << "[SERVER] Shutting down server" << std::endl;
 }

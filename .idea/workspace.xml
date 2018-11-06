@@ -10,8 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec64dd51-a756-4345-9136-36de6f5ef36a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/tcp_server_socket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/tcp_server_socket.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -48,13 +48,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="537" />
-          <entry key="cpp" value="9744" />
+          <entry key="cpp" value="11001" />
           <entry key="h" value="1001" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="10745" />
+          <entry key="ObjectiveC" value="12002" />
           <entry key="PLAIN_TEXT" value="537" />
         </counts>
       </usages-collector>
@@ -101,8 +101,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="533">
-              <caret line="129" column="88" selection-start-line="129" selection-start-column="88" selection-end-line="129" selection-end-column="88" />
+            <state relative-caret-position="352">
+              <caret line="143" column="25" selection-start-line="143" selection-start-column="25" selection-end-line="143" selection-end-column="25" />
+              <folding>
+                <element signature="e#501#1259#0" />
+                <element signature="e#1265#1408#0" />
+                <element signature="e#3814#4569#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -146,8 +151,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/tcp_server_socket.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="840">
-              <caret line="56" column="1" lean-forward="true" selection-start-line="56" selection-start-column="1" selection-end-line="56" selection-end-column="1" />
+            <state relative-caret-position="491">
+              <caret line="59" column="98" selection-start-line="59" selection-start-column="98" selection-end-line="59" selection-end-column="98" />
             </state>
           </provider>
         </entry>
@@ -156,14 +161,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>init()</find>
-      <find>fail</find>
-      <find>address</find>
-      <find>socket</find>
-      <find>cs457::</find>
-      <find>getBuffer()</find>
-      <find>listen</find>
-      <find>serverSocket</find>
       <find>getSocket()</find>
       <find>getLength</find>
       <find>get</find>
@@ -178,14 +175,22 @@
       <find>accept_</find>
       <find>SERVE</find>
       <find>recvString</find>
-      <find>cclient</find>
       <find>process_and_wait</find>
-      <find>accept</find>
       <find>sendString</find>
       <find>thread</find>
       <find>clientSoc</find>
       <find>client</find>
       <find>make_unique</find>
+      <find>cclient</find>
+      <find>id</find>
+      <find>accept</find>
+      <find>still_running</find>
+      <find>socket(</find>
+      <find>TWO</find>
+      <find>acceptS</find>
+      <find>terminate</find>
+      <find>accepted</find>
+      <find>&amp;&amp; still</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -213,7 +218,6 @@
         <option value="$PROJECT_DIR$/server/tcp_user_socket.cpp" />
         <option value="$PROJECT_DIR$/server/tcp_user_socket.h" />
         <option value="$PROJECT_DIR$/server/tcp_server_socket.h" />
-        <option value="$PROJECT_DIR$/server/tcp_server_socket.cpp" />
         <option value="$PROJECT_DIR$/client/chatClient.cpp" />
         <option value="$PROJECT_DIR$/utils/Makefile" />
         <option value="$PROJECT_DIR$/server/Makefile" />
@@ -221,6 +225,7 @@
         <option value="$PROJECT_DIR$/client/tcp_client_socket.h" />
         <option value="$PROJECT_DIR$/client/tcp_client_socket.cpp" />
         <option value="$PROJECT_DIR$/client/main.cpp" />
+        <option value="$PROJECT_DIR$/server/tcp_server_socket.cpp" />
         <option value="$PROJECT_DIR$/server/main.cpp" />
       </list>
     </option>
@@ -232,9 +237,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="4">
-    <option name="x" value="940" />
-    <option name="width" value="980" />
-    <option name="height" value="1053" />
+    <option name="x" value="790" />
+    <option name="width" value="1130" />
+    <option name="height" value="1052" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -314,18 +319,18 @@
       <workItem from="1541443929474" duration="337000" />
       <workItem from="1541448345746" duration="2390000" />
       <workItem from="1541453256420" duration="5300000" />
-      <workItem from="1541458944918" duration="563000" />
+      <workItem from="1541458944918" duration="4586000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36340000" />
+    <option name="totallyTimeSpent" value="40363000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="940" y="0" width="980" height="1053" extended-state="4" />
+    <frame x="790" y="0" width="1130" height="1052" extended-state="4" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22376874" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19280443" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -433,15 +438,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/tcp_server_socket.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="56" column="1" lean-forward="true" selection-start-line="56" selection-start-column="1" selection-end-line="56" selection-end-column="1" />
+        <state relative-caret-position="491">
+          <caret line="59" column="98" selection-start-line="59" selection-start-column="98" selection-end-line="59" selection-end-column="98" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="129" column="88" selection-start-line="129" selection-start-column="88" selection-end-line="129" selection-end-column="88" />
+        <state relative-caret-position="352">
+          <caret line="143" column="25" selection-start-line="143" selection-start-column="25" selection-end-line="143" selection-end-column="25" />
+          <folding>
+            <element signature="e#501#1259#0" />
+            <element signature="e#1265#1408#0" />
+            <element signature="e#3814#4569#0" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -21,7 +21,8 @@ int IRC_Server::TCP_Server_Socket::bind_socket()
 
 int IRC_Server::TCP_Server_Socket::init()
 {
-    this->server_socket = socket(AF_INET,SOCK_STREAM,IPPROTO_TCP);
+    // trying to make this non-blocking so we can check if the server needs to exit
+    this->server_socket = socket(AF_INET,SOCK_STREAM | SOCK_NONBLOCK,IPPROTO_TCP);
     const char * cstr = this->address.c_str();
     this->server_address = {};
     this->server_address.sin_family = AF_INET;
