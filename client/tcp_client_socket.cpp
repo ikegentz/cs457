@@ -4,7 +4,9 @@
 #include <string> 
 #include <cstring> 
 #include <vector> 
-
+#include <sys/fcntl.h>
+#include <cstring>
+#include <mutex>
 using namespace std; 
     
 
@@ -28,6 +30,13 @@ void IRC_Client::TCPClientSocket::init()
     //string addresscpy(inet_ntoa(addr));
     //address = addresscpy;  
     serverAddress.sin_port = htons(port);
+
+    struct timeval tv;
+    tv.tv_sec = 1;
+    tv.tv_usec = 0;
+
+    // set a timeout so we don't get stuck receiving
+    setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
 }
 
 void IRC_Client::TCPClientSocket::setSocketOptions()
@@ -40,8 +49,6 @@ void IRC_Client::TCPClientSocket::setSocketOptions()
 int IRC_Client::TCPClientSocket::connectSocket()
 {
     return connect(clientSocket,(struct sockaddr *)&serverAddress,sizeof(serverAddress));
-
-
 }
 
 int IRC_Client::TCPClientSocket::closeSocket()

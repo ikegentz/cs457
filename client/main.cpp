@@ -4,18 +4,25 @@
 
 #include <unistd.h>
 #include <iostream>
+#include <thread>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <mutex>
+#include <unordered_map>
+#include <queue>
 
 #include "tcp_client_socket.h"
+#include "client_command_processor.h"
+#include "client_globals.h"
 
 
 namespace IRC_Client
 {
-    const std::string DEFAULT_HOSTNAME = "127.0.0.1";
-    const std::string DEFAULT_USERNAME = "loudmouth";
-    const unsigned DEFAULT_SERVER_PORT = 1997;
-    const std::string DEFAULT_LOGPATH = "client.log";
-    const std::string DEFAULT_CONFIG_PATH = "client.conf";
-    const std::string DEFAULT_TEST_PATH = "test.txt";
+    std::queue<std::string> message_queue;
+    std::mutex message_queue_mutex;
+
+    static bool communicator_running = true;
 
     std::string usage()
     {
@@ -56,7 +63,72 @@ namespace IRC_Client
         return ret;
     }
 
+    // we only want to use the mutex lock for the pop(), so put it in a function so it goes out of scope
+    std::string next_message()
+    {
+        std::lock_guard<std::mutex> guard(IRC_Client::message_queue_mutex);
+        std::string message = message_queue.front(); // get the message
+        message_queue.pop(); // remove it
+
+        return message;
+    }
+
+    void communicate_with_server(TCPClientSocket* clientSocket)
+    {
+        std::cout << "COMMUNICATION GWITH SERV" << std::endl;
+        std::cout << "BOOL: " << communicator_running;
+        while(communicator_running)
+        {
+            if(message_queue.empty())
+            {
+                // sleep for a bit before checking if there's something to send
+                std::this_thread::sleep_for(std::chrono::seconds(3));
+                continue;
+            }
+
+            std::string message = next_message();
+
+            // loop of trying to send message
+            ssize_t v;
+            do
+            {
+                clientSocket->sendString(message, false);
+
+                std::string msg;
+                tie(msg, v) = clientSocket->recvString(4096, false);
+
+                if(v > 0)
+                    std::cout << "[CLIENT] Server said: " << msg << std::endl;
+            } while(v <= 0);
+        }
+    }
+
+    void process_client_commands()
+    {
+        static bool RUNNING = true;
+
+        char input_cstr[256];
+        std::string input;
+        do
+        {
+            std::cout << "\n\t$ ";
+            std::cin.getline(input_cstr, 256);
+            input = std::string(input_cstr);
+            std::transform(input.begin(), input.end(), input.begin(), ::tolower);
+
+            std::string outgoing_msg = IRC_Client::build_outgoing_message(input, RUNNING);
+
+            // push a message onto the queue to be sent by the socket thread
+            std::lock_guard<std::mutex> guard(IRC_Client::message_queue_mutex);
+            message_queue.push(outgoing_msg);
+
+            std::cout << outgoing_msg << std::endl;
+        } while (RUNNING);
+        communicator_running = false;
+    }
 }
+
+
 int main(int argc, char **argv)
 {
     if(argc == 1)
@@ -113,7 +185,7 @@ int main(int argc, char **argv)
 
     std::cout << "[CLIENT] Starting the client..." << std::endl;
 
-    std::cout << "HOST!!!!! " << serverIP << std::endl;
+    std::cout << "[CLIENT] Connecting to server " << serverIP << " on port " << port << std::endl;
 
     IRC_Client::TCPClientSocket clientSocket(serverIP,port);
 
@@ -125,24 +197,11 @@ int main(int argc, char **argv)
     }
     std::cout << "[CLIENT] You are now connected to the server" << std::endl;
 
+    std::thread commandListener(IRC_Client::process_client_commands);
+    std::thread communicatorThread(IRC_Client::communicate_with_server, &clientSocket);
 
-
-
-    //main loop here
-
-    clientSocket.sendString("Hello Server. How are you? ",false);
-
-    std::string msg;
-    ssize_t v;
-    tie(msg,v) =  clientSocket.recvString(4096,false);
-    std::cout << "server said: " << msg << std::endl;
-
-    std::cout << "Client will try to exit now" << std::endl;
-
-    clientSocket.sendString("EXIT",false);
-
-    tie(msg,v) =  clientSocket.recvString(4096,false);
-    std::cout << "server said: " << msg << std::endl;
+    commandListener.join();
+    communicatorThread.join();
 
     clientSocket.closeSocket();
 
