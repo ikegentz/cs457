@@ -38,6 +38,11 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
             response = help_command();
             should_send = false;
         }
+        else if(command.find("ping") != std::string::npos)
+        {
+            response = ping_command();
+            should_send = true;
+        }
         else
         {
             response = "[CLIENT] Unrecognized command '" + command + "'";
@@ -50,6 +55,10 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
     //process general message
     response = client_input;
     return std::make_tuple(response, true);
+}
+std::string IRC_Client::ping_command()
+{
+    return "PING";
 }
 
 std::string IRC_Client::list_command()

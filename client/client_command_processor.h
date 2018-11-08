@@ -18,6 +18,7 @@ namespace IRC_Client
     std::string quit_command();
     std::string cprivmsg_command();
     std::string help_command();
+    std::string ping_command();
 }
 
 #endif //CS457_CLIENT_COMMAND_PROCESSOR_H

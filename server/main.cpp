@@ -219,6 +219,11 @@ namespace IRC_Server
                 thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
                 sendThread.join();
             }
+            else if(msg.substr(0,4) == "PING")
+            {
+                thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "[SERVER] PONG", true);
+                sendThread.join();
+            }
             else
             {
                 // This is where we simply recieved a chat message. Broadcast to the channel...
