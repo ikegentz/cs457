@@ -130,6 +130,19 @@ namespace IRC_Client
         } while (RUNNING);
         communicator_running = false;
     }
+
+    void initial_connect_message(std::string nickname)
+    {
+        // send initial connection information
+        char hostname[1024];
+        char username[1024];
+        gethostname(hostname, 1024);
+        getlogin_r(username, LOGIN_NAME_MAX);
+
+        std::string initial_connection = "USER " + nickname + " " + hostname + " IKE_SERVER " + " :" + username;
+        std::lock_guard<std::mutex> guard(IRC_Client::message_queue_mutex);
+        IRC_Client::message_queue.push(initial_connection);
+    }
 }
 
 
@@ -202,17 +215,7 @@ int main(int argc, char **argv)
 
     std::cout << "[CLIENT] You are now connected to the server" << std::endl;
 
-
-    // send initial connection information
-//    char hostname[1024];
-//    char username[1024];
-//    gethostname(hostname, 1024);
-//    getlogin_r(username, LOGIN_NAME_MAX);
-//    std::string initial_connection = "USER " + nickname + " " + hostname + " IKE_SERVER " + " :" + username;
-//    std::lock_guard<std::mutex> guard(IRC_Client::message_queue_mutex);
-//    IRC_Client::message_queue.push(initial_connection);
-
-    //TODO make sure that initial user thing gets sent!!!
+    IRC_Client::initial_connect_message(nickname);
 
     // main loops. receive typed input
     std::thread commandListener(IRC_Client::process_client_commands);
