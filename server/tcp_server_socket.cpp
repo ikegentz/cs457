@@ -53,6 +53,13 @@ int IRC_Server::TCP_Server_Socket::init()
 
 void IRC_Server::TCP_Server_Socket::set_socket_options()
 {
+    struct timeval tv;
+    tv.tv_sec = 1;
+    tv.tv_usec = 0;
+
+    // set a timeout so we don't get stuck receiving
+    setsockopt(this->server_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+
     int optval = 1;
     setsockopt(this->server_socket, SOL_SOCKET, SO_REUSEADDR, (const void *)&optval , sizeof(int));
 }
