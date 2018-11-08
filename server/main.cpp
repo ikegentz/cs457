@@ -8,22 +8,31 @@
 #include <algorithm>
 #include <mutex>
 #include <unordered_map>
+#include <map>
 
 
 #include "tcp_server_socket.h"
 #include "tcp_user_socket.h"
+#include "user.h"
+#include "../utils/string_ops.h"
 
 namespace IRC_Server
 {
     const static unsigned DEFAULT_SERVER_PORT = 1997;
     const static std::string DEFAULT_CONFPATH = "/conf";
     const static std::string DEFAULT_LOGPATH = "/logs";
+
     static std::vector<std::unique_ptr<thread>> threadList;
+
     static std::unordered_map<int, std::shared_ptr<IRC_Server::TCP_User_Socket>> clientSockets;
-    std::mutex clientSockets_mutex;
+    static std::mutex clientSockets_mutex;
+
     static bool ready = true;
     static bool still_running = true;
     static unsigned threadID = 0;
+
+    static std::map<std::string, IRC_Server::User> users;
+    static std::mutex users_mutex;
 
     std::string usage()
     {
@@ -50,6 +59,39 @@ namespace IRC_Server
     {
         std::string ret = "UNRECOGNIZED PROGRAM ARGUMENT: -" + selected;
         return ret;
+    }
+
+    std::string user_command(std::string input, std::string ip_addr, int port)
+    {
+        std::vector<std::string> tokens;
+        Utils::tokenize_line(input, tokens);
+
+        std::string nick = tokens[1];
+        std::string host = tokens[2];
+        std::string srv = tokens[3];
+
+        std::string username;
+        for(unsigned i = 4; i < tokens.size(); ++i)
+        {
+            username += tokens[i];
+        }
+
+        User user(nick, ip_addr, port, host);
+
+        // user already exists. We will return and not add this user
+        if(users.find(nick) != users.end())
+        {
+            std::cout << "[SERVER] " << user.to_string() << " tried to connect. That nicname was already in use." << std::endl <<
+            "\n\t $ ";
+            std::cout.flush();
+            return "[SERVER] Sorry, that nickname has already been used. Please try logging in with a different username.";
+        }
+
+        // nickname hasn't been used yet so we will add the user
+        std::lock_guard<std::mutex> guard(users_mutex);
+        users.insert(std::pair<std::string, User>(nick, user));
+
+        return "[SERVER] Welcome to the server! You are currently on the #general channel.";
     }
 
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, int id)
@@ -128,6 +170,12 @@ namespace IRC_Server
                 cont = false;
                 still_running = false;
                 childTExit.join();
+            }
+            else if(msg.substr(0, 4) == "USER")
+            {
+                std::string to_user = user_command(msg, clientSocket.get()->getAddress(), clientSocket.get()->getPort());
+                thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
+                sendThread.join();
             }
             else
             {

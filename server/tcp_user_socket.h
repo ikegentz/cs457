@@ -34,6 +34,8 @@ namespace IRC_Server
         void setUserInfoIPv4(string clientAddress, uint16_t port);
         ssize_t sendString(const string &data, bool useMutex = true);
         string getUniqueIdentifier();
+        std::string getAddress();
+        int getPort();
 
     private:
         struct sockaddr_in userAddress;

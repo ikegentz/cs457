@@ -91,6 +91,16 @@ ssize_t IRC_Server::TCP_User_Socket::sendString(const string & data, bool useMut
     return rval;
 }
 
+std::string IRC_Server::TCP_User_Socket::getAddress()
+{
+    return clientAddressIPv4;
+}
+
+int IRC_Server::TCP_User_Socket::getPort()
+{
+    return clientPortIPv4;
+}
+
 string IRC_Server::TCP_User_Socket::getUniqueIdentifier()
 {
     //this unique identifier is arbitrary
