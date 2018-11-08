@@ -135,6 +135,12 @@ namespace IRC_Server
         return nick;
     }
 
+    void ping_command(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "[SERVER] PONG", true);
+        sendThread.join();
+    }
+
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
     {
         std::string msg;
@@ -226,8 +232,7 @@ namespace IRC_Server
             }
             else if(msg.substr(0,4) == "PING")
             {
-                thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "[SERVER] PONG", true);
-                sendThread.join();
+                ping_command(clientSocket);
             }
             else
             {

@@ -48,13 +48,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="681" />
-          <entry key="cpp" value="21116" />
+          <entry key="cpp" value="21157" />
           <entry key="h" value="2304" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="23420" />
+          <entry key="ObjectiveC" value="23461" />
           <entry key="PLAIN_TEXT" value="681" />
         </counts>
       </usages-collector>
@@ -86,11 +86,13 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="89" column="48" selection-start-line="89" selection-start-column="48" selection-end-line="89" selection-end-column="48" />
+            <state relative-caret-position="639">
+              <caret line="234" column="43" selection-start-line="234" selection-start-column="43" selection-end-line="234" selection-end-column="43" />
               <folding>
                 <element signature="e#792#1538#0" />
                 <element signature="e#1478#1621#0" />
+                <element signature="e#1992#3406#0" />
+                <element signature="e#4540#4637#0" />
                 <element signature="e#3223#5143#0" />
                 <element signature="e#8755#10128#0" />
                 <element signature="e#10134#11010#0" />
@@ -113,7 +115,7 @@
         <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
-              <caret line="20" column="31" lean-forward="true" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
+              <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -342,12 +344,12 @@
       <workItem from="1541561371403" duration="13241000" />
       <workItem from="1541629206427" duration="2345000" />
       <workItem from="1541634540802" duration="2062000" />
-      <workItem from="1541641691500" duration="10658000" />
+      <workItem from="1541641691500" duration="10777000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="70848000" />
+    <option name="totallyTimeSpent" value="70967000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="-1" width="1920" height="1080" extended-state="6" />
@@ -527,17 +529,19 @@
     <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
-          <caret line="20" column="31" lean-forward="true" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
+          <caret line="20" column="31" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="89" column="48" selection-start-line="89" selection-start-column="48" selection-end-line="89" selection-end-column="48" />
+        <state relative-caret-position="639">
+          <caret line="234" column="43" selection-start-line="234" selection-start-column="43" selection-end-line="234" selection-end-column="43" />
           <folding>
             <element signature="e#792#1538#0" />
             <element signature="e#1478#1621#0" />
+            <element signature="e#1992#3406#0" />
+            <element signature="e#4540#4637#0" />
             <element signature="e#3223#5143#0" />
             <element signature="e#8755#10128#0" />
             <element signature="e#10134#11010#0" />
