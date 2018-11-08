@@ -87,8 +87,10 @@ namespace IRC_Server
         }
     }
 
-    std::tuple<std::string, User> user_command(std::string input, std::string ip_addr, int port)
+    std::string user_command(std::string input, std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
     {
+        std::string ip_addr = clientSocket.get()->getAddress();
+        int port = clientSocket.get()->getPort();
         std::vector<std::string> tokens;
         Utils::tokenize_line(input, tokens);
 
@@ -112,8 +114,12 @@ namespace IRC_Server
             std::cout << "[SERVER] " << user.to_string() << " tried to connect. That nickname was already in use." << std::endl <<
             "\n\t $ ";
             std::cout.flush();
-            return std::make_tuple("[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.",
-                                   user);
+
+            std::string to_user = "[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.";
+            thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
+            sendThread.join();
+
+            return nick;
         }
 
         // nickname hasn't been used yet so we will add the user
@@ -122,7 +128,11 @@ namespace IRC_Server
 
         add_user_to_channel("general", nick);
 
-        return std::make_tuple("[SERVER] Welcome to the server! You've been added to the #general channel.", user);
+        std::string to_user = "[SERVER] Welcome to the server! You've been added to the #general channel.";
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
+        sendThread.join();
+
+        return nick;
     }
 
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
@@ -212,12 +222,7 @@ namespace IRC_Server
             }
             else if(msg.substr(0, 4) == "USER")
             {
-                std::string to_user;
-                User newUser;
-                tie(to_user, newUser) = user_command(msg, clientSocket.get()->getAddress(), clientSocket.get()->getPort());
-                nickname = newUser.nickname;
-                thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
-                sendThread.join();
+                nickname = user_command(msg, clientSocket);
             }
             else if(msg.substr(0,4) == "PING")
             {
