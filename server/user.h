@@ -12,12 +12,13 @@ namespace IRC_Server
     class User
     {
     public:
-        User(std::string, std::string, int, std::string);
+        User(std::string, std::string, int, std::string, std::string);
         User();
         std::string nickname;
         std::string ip_address;
         int port;
         std::string hostname;
+        std::string current_channel;
 
         std::string to_string();
     };

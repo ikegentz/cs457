@@ -106,7 +106,7 @@ namespace IRC_Server
             username += tokens[i];
         }
 
-        User user(nick, ip_addr, port, host);
+        User user(nick, ip_addr, port, host, "general");
 
         // user already exists. We will return and not add this user
         if(users.find(nick) != users.end())
@@ -170,6 +170,18 @@ namespace IRC_Server
         cont = false;
         still_running = false;
         childTExit.join();
+    }
+
+    void process_general_message(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        std::string s = "\n";
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
+        sendThread.join();
+
+        //TODO send chat message to channel
+        
+        std::cout << "\n\t $ ";
+        std::cout.flush();
     }
 
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
@@ -247,13 +259,7 @@ namespace IRC_Server
             {
                 // This is where we simply recieved a chat message. Broadcast to the channel...
                 // send acknowledgement to client
-                std::string s = "\n";
-                thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
-                sendThread.join();
-
-                // send chat message to channel
-                std::cout << "\n\t $ ";
-                std::cout.flush();
+                process_general_message(clientSocket);
             }
 
         }
