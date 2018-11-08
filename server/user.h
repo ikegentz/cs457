@@ -13,6 +13,7 @@ namespace IRC_Server
     {
     public:
         User(std::string, std::string, int, std::string);
+        User();
         std::string nickname;
         std::string ip_address;
         int port;

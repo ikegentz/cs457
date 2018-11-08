@@ -9,12 +9,15 @@
 #include <mutex>
 #include <unordered_map>
 #include <map>
+#include <set>
 
 
 #include "tcp_server_socket.h"
 #include "tcp_user_socket.h"
 #include "user.h"
 #include "../utils/string_ops.h"
+
+#define DEBUG false
 
 namespace IRC_Server
 {
@@ -33,6 +36,10 @@ namespace IRC_Server
 
     static std::map<std::string, IRC_Server::User> users;
     static std::mutex users_mutex;
+
+    //             channel_name    // set of users
+    static std::map<std::string, std::set<std::string>> channels;
+    static std::mutex channels_mutex;
 
     std::string usage()
     {
@@ -61,7 +68,26 @@ namespace IRC_Server
         return ret;
     }
 
-    std::string user_command(std::string input, std::string ip_addr, int port)
+    void add_user_to_channel(std::string channel_name, std::string nickname)
+    {
+        std::lock_guard<std::mutex> guard(channels_mutex);
+
+        // channel exists, so we add user to it
+        if(channels.find(channel_name) != channels.end())
+        {
+            std::set<std::string> channel = channels.find(channel_name)->second;
+            // sets are unique, so we can just insert here. If user is already in this channel, simply won't be inserted again
+            channel.insert(nickname);
+        }
+        else
+        {
+            std::set<std::string> channel;
+            channel.insert(nickname);
+            channels.insert(std::pair<std::string, std::set<std::string>>(channel_name, channel));
+        }
+    }
+
+    std::tuple<std::string, User> user_command(std::string input, std::string ip_addr, int port)
     {
         std::vector<std::string> tokens;
         Utils::tokenize_line(input, tokens);
@@ -73,6 +99,8 @@ namespace IRC_Server
         std::string username;
         for(unsigned i = 4; i < tokens.size(); ++i)
         {
+            if(i == 4)
+                tokens[i].erase(0, 1);
             username += tokens[i];
         }
 
@@ -81,24 +109,28 @@ namespace IRC_Server
         // user already exists. We will return and not add this user
         if(users.find(nick) != users.end())
         {
-            std::cout << "[SERVER] " << user.to_string() << " tried to connect. That nicname was already in use." << std::endl <<
+            std::cout << "[SERVER] " << user.to_string() << " tried to connect. That nickname was already in use." << std::endl <<
             "\n\t $ ";
             std::cout.flush();
-            return "[SERVER] Sorry, that nickname has already been used. Please try logging in with a different username.";
+            return std::make_tuple("[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.",
+                                   user);
         }
 
         // nickname hasn't been used yet so we will add the user
         std::lock_guard<std::mutex> guard(users_mutex);
         users.insert(std::pair<std::string, User>(nick, user));
 
-        return "[SERVER] Welcome to the server! You are currently on the #general channel.";
+        add_user_to_channel("general", nick);
+
+        return std::make_tuple("[SERVER] Welcome to the server! You've been added to the #general channel.", user);
     }
 
-    int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, int id)
+    int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
     {
         std::string msg;
         ssize_t val;
         bool cont = true;
+        std::string nickname;
 
         // don't block, so that we can check read values and exit properly
 
@@ -112,7 +144,7 @@ namespace IRC_Server
 
             // we will have a timeout if we dont' hear anything. In that case, continue on and try again
             if(val > 0)
-                std::cout << "\n[CLIENT_LISTENER] Recieved message from client: " << msg << " -- With recieved buffer size: " << val << " -- Processing..." << std::endl;
+                std::cout << "\n[CLIENT_LISTENER] " << nickname << ": " << msg << std::endl;
             else
                 continue;
 
@@ -125,11 +157,18 @@ namespace IRC_Server
                 thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
                 sendThread.join();
 
-                std::lock_guard<std::mutex> guard(clientSockets_mutex);
+                //remove this user from the user's list
+                std::lock_guard<std::mutex> guard(users_mutex);
+                users.erase(nickname);
+
+                //TODO clean up channel that user was part of
+
+                std::lock_guard<std::mutex> guard2(clientSockets_mutex);
                 clientSocket.get()->closeSocket();
                 std::cout << "\tSuccessfully closed the client\n" <<
                 "\n\t $ ";
                 std::cout.flush();
+
                 return 0;
             }
             else if(msg.substr(0, 6) == "SERVER")
@@ -173,27 +212,35 @@ namespace IRC_Server
             }
             else if(msg.substr(0, 4) == "USER")
             {
-                std::string to_user = user_command(msg, clientSocket.get()->getAddress(), clientSocket.get()->getPort());
+                std::string to_user;
+                User newUser;
+                tie(to_user, newUser) = user_command(msg, clientSocket.get()->getAddress(), clientSocket.get()->getPort());
+                nickname = newUser.nickname;
                 thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
                 sendThread.join();
             }
             else
             {
                 // This is where we simply recieved a chat message. Broadcast to the channel...
-                std::cout << "\tRecieved general chat message. Sending to users in the channel..." << std::endl;
                 // send acknowledgement to client
-                std::string s = "Hello client, I am the server!\n";
+                std::string s = "\n";
                 thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
                 sendThread.join();
+
                 // send chat message to channel
-                std::cout << "\tWaiting for another message...\n" <<
-                "\n\t $ ";
+                std::cout << "\n\t $ ";
                 std::cout.flush();
             }
 
         }
         clientSocket.get()->sendString("Server shutting down. Goodbye!");
         clientSocket.get()->closeSocket();
+
+        //remove this user from the user's list
+        std::lock_guard<std::mutex> guard(users_mutex);
+        users.erase(nickname);
+
+        //TODO clean up channel that user was part of
         return 1;
     }
 
@@ -221,7 +268,7 @@ namespace IRC_Server
             std::lock_guard<std::mutex> guard(clientSockets_mutex);
             clientSockets[threadID] = clientSocket;
 
-            unique_ptr<thread> t = make_unique<thread>(cclient, clientSockets.find(threadID)->second, threadID);
+            unique_ptr<thread> t = make_unique<thread>(cclient, clientSockets.find(threadID)->second);
             threadList.push_back(std::move(t));
             ++threadID;
         }
