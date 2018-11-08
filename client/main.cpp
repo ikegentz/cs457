@@ -17,7 +17,7 @@
 #include "client_command_processor.h"
 #include "client_globals.h"
 
-#define DEBUG true
+#define DEBUG false
 
 namespace IRC_Client
 {
@@ -98,8 +98,8 @@ namespace IRC_Client
                 std::string msg;
                 tie(msg, v) = clientSocket->recvString(4096, false);
 
-                // print response from server
-                if(v > 0)
+                // print response from server, as long as it isn't just an empty acknowledgement
+                if(v > 0 && msg != "\n")
                     std::cout << msg << std::endl;
             } while(v <= 0);
         }
@@ -113,16 +113,20 @@ namespace IRC_Client
         std::string input;
         do
         {
-            std::cout << "\n\t$ ";
             std::cin.getline(input_cstr, 256);
             input = std::string(input_cstr);
             std::transform(input.begin(), input.end(), input.begin(), ::tolower);
 
-            std::string outgoing_msg = IRC_Client::build_outgoing_message(input, RUNNING);
+            std::string outgoing_msg;
+            bool should_send;
+            tie(outgoing_msg, should_send) = IRC_Client::build_outgoing_message(input, RUNNING);
 
             // push a message onto the queue to be sent by the socket thread
-            std::lock_guard<std::mutex> guard(IRC_Client::message_queue_mutex);
-            message_queue.push(outgoing_msg);
+            if(should_send)
+            {
+                std::lock_guard <std::mutex> guard(IRC_Client::message_queue_mutex);
+                message_queue.push(outgoing_msg);
+            }
 
 #if DEBUG == true
             std::cout << outgoing_msg << std::endl;
@@ -131,7 +135,7 @@ namespace IRC_Client
         communicator_running = false;
     }
 
-    void initial_connect_message(std::string nickname)
+    std::string initial_connect_message(std::string nickname)
     {
         // send initial connection information
         char hostname[1024];
@@ -140,8 +144,7 @@ namespace IRC_Client
         getlogin_r(username, LOGIN_NAME_MAX);
 
         std::string initial_connection = "USER " + nickname + " " + hostname + " IKE_SERVER " + " :" + username;
-        std::lock_guard<std::mutex> guard(IRC_Client::message_queue_mutex);
-        IRC_Client::message_queue.push(initial_connection);
+        return initial_connection;
     }
 }
 
@@ -213,9 +216,22 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    std::cout << "[CLIENT] You are now connected to the server" << std::endl;
+    //check initial connection
+    std::string message = IRC_Client::initial_connect_message(nickname);
+    clientSocket.sendString(message, false);
+    ssize_t v;
+    std::string msg;
+    tie(msg, v) = clientSocket.recvString(4096, false);
 
-    IRC_Client::initial_connect_message(nickname);
+    // username already taken
+    if(msg.find("IN_USE") != std::string::npos)
+    {
+        std::cout << msg << std::endl;
+        clientSocket.closeSocket();
+        exit(0);
+    }
+
+    std::cout << msg << std::endl;
 
     // main loops. receive typed input
     std::thread commandListener(IRC_Client::process_client_commands);
