@@ -11,11 +11,13 @@
 #include <mutex>
 #include <unordered_map>
 #include <queue>
+#include <limits.h>
 
 #include "tcp_client_socket.h"
 #include "client_command_processor.h"
 #include "client_globals.h"
 
+#define DEBUG true
 
 namespace IRC_Client
 {
@@ -75,9 +77,8 @@ namespace IRC_Client
 
     void communicate_with_server(TCPClientSocket* clientSocket)
     {
-        std::cout << "COMMUNICATION GWITH SERV" << std::endl;
-        std::cout << "BOOL: " << communicator_running;
-        while(communicator_running)
+        // process any messages that haven't been sent yet
+        while(communicator_running || !IRC_Client::message_queue.empty())
         {
             if(message_queue.empty())
             {
@@ -97,8 +98,9 @@ namespace IRC_Client
                 std::string msg;
                 tie(msg, v) = clientSocket->recvString(4096, false);
 
+                // print response from server
                 if(v > 0)
-                    std::cout << "[CLIENT] Server said: " << msg << std::endl;
+                    std::cout << msg << std::endl;
             } while(v <= 0);
         }
     }
@@ -122,7 +124,9 @@ namespace IRC_Client
             std::lock_guard<std::mutex> guard(IRC_Client::message_queue_mutex);
             message_queue.push(outgoing_msg);
 
+#if DEBUG == true
             std::cout << outgoing_msg << std::endl;
+#endif
         } while (RUNNING);
         communicator_running = false;
     }
@@ -139,7 +143,7 @@ int main(int argc, char **argv)
 
     std::string serverIP = IRC_Client::DEFAULT_HOSTNAME;
     int port = IRC_Client::DEFAULT_SERVER_PORT;
-    std::string username = IRC_Client::DEFAULT_USERNAME;
+    std::string nickname = IRC_Client::DEFAULT_USERNAME;
     std::string config_filepath = IRC_Client::DEFAULT_CONFIG_PATH;
     std::string test_filepath = IRC_Client::DEFAULT_TEST_PATH;
     std::string log_filepath = IRC_Client::DEFAULT_LOGPATH;
@@ -153,7 +157,7 @@ int main(int argc, char **argv)
                 break;
             case 'u':
                 selected_opt = 'u';
-                username = optarg;
+                nickname = optarg;
                 break;
             case 'p':
                 selected_opt = 'p';
@@ -195,9 +199,24 @@ int main(int argc, char **argv)
         std::cerr << "[CLIENT] Couldn't connect to the server. Check hostname/IP and port" << std::endl;
         exit(1);
     }
+
     std::cout << "[CLIENT] You are now connected to the server" << std::endl;
 
+
+    // send initial connection information
+//    char hostname[1024];
+//    char username[1024];
+//    gethostname(hostname, 1024);
+//    getlogin_r(username, LOGIN_NAME_MAX);
+//    std::string initial_connection = "USER " + nickname + " " + hostname + " IKE_SERVER " + " :" + username;
+//    std::lock_guard<std::mutex> guard(IRC_Client::message_queue_mutex);
+//    IRC_Client::message_queue.push(initial_connection);
+
+    //TODO make sure that initial user thing gets sent!!!
+
+    // main loops. receive typed input
     std::thread commandListener(IRC_Client::process_client_commands);
+    // communicate with the server
     std::thread communicatorThread(IRC_Client::communicate_with_server, &clientSocket);
 
     commandListener.join();
