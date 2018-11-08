@@ -9,6 +9,7 @@
 #include <mutex>
 #include <unordered_map>
 
+
 #include "tcp_server_socket.h"
 #include "tcp_user_socket.h"
 
@@ -156,7 +157,7 @@ namespace IRC_Server
             shared_ptr<IRC_Server::TCP_User_Socket> clientSocket;
             int val;
 
-            // server socket uses a timeout so the CPU doesn't kill itself busy waiting here...
+            // TODO should use poll() for acceptSocket() to avoid busy waiting. For now... meh it works
             do
             {
                 // made this non-blocking so we could check if server is still running
