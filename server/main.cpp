@@ -141,6 +141,37 @@ namespace IRC_Server
         sendThread.join();
     }
 
+    void quit_command(bool& cont, std::string nickname, std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        std::cout << "\tRecieved the 'QUIT' command from the client. Closing this client's connection..." << std::endl;
+        cont = false;
+        std::string s = "You are being disconnected per your request\n";
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
+        sendThread.join();
+
+        //remove this user from the user's list
+        std::lock_guard<std::mutex> guard(users_mutex);
+        users.erase(nickname);
+
+        //TODO clean up channel that user was part of
+
+        std::lock_guard<std::mutex> guard2(clientSockets_mutex);
+        clientSocket.get()->closeSocket();
+        std::cout << "\tSuccessfully closed the client\n" <<
+                  "\n\t $ ";
+        std::cout.flush();
+    }
+
+    void server_shutdown_command(bool& ready, bool& cont, bool& still_running, std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        std::cout << "\tDetected another server. Shutting down to avoid cyclic behavior..." << std::endl;
+        thread childTExit(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "GOODBYE EVERYONE\n", false);
+        ready = false;
+        cont = false;
+        still_running = false;
+        childTExit.join();
+    }
+
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
     {
         std::string msg;
@@ -167,24 +198,7 @@ namespace IRC_Server
 
             if(msg.substr(0,4) == "QUIT")
             {
-                std::cout << "\tRecieved the 'QUIT' command from the client. Closing this client's connection..." << std::endl;
-                cont = false;
-                std::string s = "You are being disconnected per your request\n";
-                thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
-                sendThread.join();
-
-                //remove this user from the user's list
-                std::lock_guard<std::mutex> guard(users_mutex);
-                users.erase(nickname);
-
-                //TODO clean up channel that user was part of
-
-                std::lock_guard<std::mutex> guard2(clientSockets_mutex);
-                clientSocket.get()->closeSocket();
-                std::cout << "\tSuccessfully closed the client\n" <<
-                "\n\t $ ";
-                std::cout.flush();
-
+                quit_command(cont, nickname, clientSocket);
                 return 0;
             }
             else if(msg.substr(0, 6) == "SERVER")
@@ -219,12 +233,7 @@ namespace IRC_Server
                  */
                 // See above comment (might be collapsed) why we exit here. In a nutshell, this creates a cycle, so
                 // one server must shut down
-                std::cout << "\tDetected another server. Shutting down to avoid cyclic behavior..." << std::endl;
-                thread childTExit(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "GOODBYE EVERYONE\n", false);
-                ready = false;
-                cont = false;
-                still_running = false;
-                childTExit.join();
+                server_shutdown_command(ready, cont, still_running, clientSocket);
             }
             else if(msg.substr(0, 4) == "USER")
             {
