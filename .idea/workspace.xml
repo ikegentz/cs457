@@ -10,8 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec64dd51-a756-4345-9136-36de6f5ef36a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/client_command_processor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/client/client_command_processor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/client/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,39 +23,39 @@
     <session id="-1576049364">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="12" />
+          <entry key="project.closed" value="13" />
           <entry key="project.open.time.1" value="1" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.6" value="2" />
           <entry key="project.open.time.7" value="4" />
-          <entry key="project.open.time.8" value="5" />
-          <entry key="project.opened" value="13" />
+          <entry key="project.open.time.8" value="6" />
+          <entry key="project.opened" value="14" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="Makefile" value="20" />
-          <entry key="cpp" value="30" />
+          <entry key="Makefile" value="22" />
+          <entry key="cpp" value="32" />
           <entry key="gitignore" value="2" />
-          <entry key="h" value="25" />
+          <entry key="h" value="27" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="ObjectiveC" value="55" />
-          <entry key="PLAIN_TEXT" value="22" />
+          <entry key="ObjectiveC" value="59" />
+          <entry key="PLAIN_TEXT" value="24" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="681" />
-          <entry key="cpp" value="27490" />
+          <entry key="cpp" value="28159" />
           <entry key="h" value="2373" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="29863" />
+          <entry key="ObjectiveC" value="30532" />
           <entry key="PLAIN_TEXT" value="681" />
         </counts>
       </usages-collector>
@@ -64,14 +63,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="222">
-              <caret line="92" column="12" selection-start-line="92" selection-start-column="12" selection-end-line="92" selection-end-column="12" />
-              <folding>
-                <element signature="e#4048#4087#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="304">
+              <caret line="162" column="5" selection-start-line="162" selection-start-column="5" selection-end-line="162" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -79,36 +75,30 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/tcp_client_socket.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="492">
-              <caret line="45" column="57" selection-start-line="45" selection-start-column="57" selection-end-line="45" selection-end-column="57" />
+            <state relative-caret-position="473">
+              <caret line="82" column="47" selection-start-line="82" selection-start-column="37" selection-end-line="82" selection-end-column="47" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="432">
-              <caret line="94" column="55" lean-forward="true" selection-start-line="94" selection-start-column="55" selection-end-line="94" selection-end-column="55" />
+            <state relative-caret-position="608">
+              <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
               <folding>
-                <element signature="e#1076#1834#0" />
-                <element signature="e#3070#4831#0" />
-                <element signature="e#4837#5064#0" />
-                <element signature="e#5897#6369#0" />
-                <element signature="e#8378#10298#0" />
-                <element signature="e#13667#13715#0" />
-                <element signature="e#13999#14275#0" />
-                <element signature="e#12943#14857#0" />
+                <element signature="e#4481#6242#0" />
+                <element signature="e#6248#6477#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utils/Makefile">
+        <entry file="file://$PROJECT_DIR$/server/tcp_user_socket.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
+            <state relative-caret-position="1080">
+              <caret line="72" column="47" selection-start-line="72" selection-start-column="37" selection-end-line="72" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -126,7 +116,7 @@
         <entry file="file://$PROJECT_DIR$/client/client_command_processor.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="615">
-              <caret line="41" column="43" lean-forward="true" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
+              <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
               <folding>
                 <element signature="e#42#79#0" expanded="true" />
               </folding>
@@ -174,9 +164,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>nicn</find>
-      <find>threadID</find>
-      <find>nickname:</find>
       <find>int id</find>
       <find>USER</find>
       <find>add_user</find>
@@ -202,8 +189,11 @@
       <find>build_outgoing</find>
       <find>join_new</find>
       <find>tokensp</find>
-      <find>kick_user</find>
       <find>should_send</find>
+      <find>QUIT</find>
+      <find>kick_user</find>
+      <find>if v</find>
+      <find>sendString</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -216,7 +206,6 @@
       <replace>get_buffer()</replace>
       <replace>IRC_Client::TCP</replace>
       <replace>process_client_commands()</replace>
-      <replace>[SERVER]</replace>
       <replace>[SERVER]</replace>
     </replaceStrings>
   </component>
@@ -248,9 +237,9 @@
         <option value="$PROJECT_DIR$/server/user.cpp" />
         <option value="$PROJECT_DIR$/server/user.h" />
         <option value="$PROJECT_DIR$/client/client_command_processor.h" />
-        <option value="$PROJECT_DIR$/server/main.cpp" />
         <option value="$PROJECT_DIR$/client/client_command_processor.cpp" />
         <option value="$PROJECT_DIR$/client/main.cpp" />
+        <option value="$PROJECT_DIR$/server/main.cpp" />
       </list>
     </option>
   </component>
@@ -271,7 +260,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -298,6 +286,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -349,18 +338,19 @@
       <workItem from="1541629206427" duration="2345000" />
       <workItem from="1541634540802" duration="2062000" />
       <workItem from="1541641691500" duration="12073000" />
-      <workItem from="1541722668684" duration="17539000" />
+      <workItem from="1541722668684" duration="18122000" />
+      <workItem from="1541786668833" duration="1838000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="89802000" />
+    <option name="totallyTimeSpent" value="92223000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="-1" width="1920" height="1080" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14140876" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1430096" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -429,13 +419,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/tcp_user_socket.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1395">
-          <caret line="93" selection-start-line="93" selection-end-line="101" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/user.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -457,24 +440,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/tcp_server_socket.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/tcp_client_socket.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="492">
-          <caret line="45" column="57" selection-start-line="45" selection-start-column="57" selection-end-line="45" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/Makefile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/client_command_processor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="615">
+          <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
+          <folding>
+            <element signature="e#42#79#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -499,46 +485,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
+    <entry file="file://$PROJECT_DIR$/server/tcp_server_socket.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
+        <state relative-caret-position="450">
+          <caret line="30" column="18" selection-start-line="30" selection-start-column="18" selection-end-line="30" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/main.cpp">
+    <entry file="file://$PROJECT_DIR$/server/tcp_user_socket.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="94" column="55" lean-forward="true" selection-start-line="94" selection-start-column="55" selection-end-line="94" selection-end-column="55" />
-          <folding>
-            <element signature="e#1076#1834#0" />
-            <element signature="e#3070#4831#0" />
-            <element signature="e#4837#5064#0" />
-            <element signature="e#5897#6369#0" />
-            <element signature="e#8378#10298#0" />
-            <element signature="e#13667#13715#0" />
-            <element signature="e#13999#14275#0" />
-            <element signature="e#12943#14857#0" />
-          </folding>
+        <state relative-caret-position="1080">
+          <caret line="72" column="47" selection-start-line="72" selection-start-column="37" selection-end-line="72" selection-end-column="47" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/client_command_processor.cpp">
+    <entry file="file://$PROJECT_DIR$/client/tcp_client_socket.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="41" column="43" lean-forward="true" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
-          <folding>
-            <element signature="e#42#79#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="473">
+          <caret line="82" column="47" selection-start-line="82" selection-start-column="37" selection-end-line="82" selection-end-column="47" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="92" column="12" selection-start-line="92" selection-start-column="12" selection-end-line="92" selection-end-column="12" />
+        <state relative-caret-position="304">
+          <caret line="162" column="5" selection-start-line="162" selection-start-column="5" selection-end-line="162" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="608">
+          <caret line="93" column="33" selection-start-line="93" selection-start-column="33" selection-end-line="93" selection-end-column="33" />
           <folding>
-            <element signature="e#4048#4087#0" expanded="true" />
+            <element signature="e#4481#6242#0" />
+            <element signature="e#6248#6477#0" />
           </folding>
         </state>
       </provider>

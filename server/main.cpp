@@ -84,21 +84,25 @@ namespace IRC_Server
         std::lock_guard<std::mutex> guard(socketLookup_mutex);
         int socketFD = socketLookup.find(user)->second;
 
-        std::string to_send = "[SERVER] You've been dropped\n";
-
-        // send to next user in the channel
-        std::lock_guard<std::mutex> guard2(clientSockets_mutex);
-        thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), to_send, false);
-        sendOthersUserThread.join();
+        std::cout << "DEBUG Found the socket with ID: " << socketFD << std::endl;
+        std::cout << "DEBUG Current number of socketLookups: " << socketLookup.size() << " -- And num Sockets: " << clientSockets.size() << std::endl;
 
         // remove user's socket
         int fdLookup = socketLookup.find(user)->second;
         clientSockets.erase(fdLookup);
 
+        socketLookup.erase(user);
+
+        std::cout << "DEBUG num sockets and stuff after erase" << std::endl;
+        std::cout << "DEBUG Found the socket with ID: " << socketFD << std::endl;
+        std::cout << "DEBUG Current number of socketLookups: " << socketLookup.size() << " -- And num Sockets: " << clientSockets.size() << std::endl;
+
         // remove user from channel
         std::string curChannel = users.find(user)->second.current_channel;
         std::lock_guard<std::mutex> guard3(channels_mutex);
         channels.find(curChannel)->second.erase(user);
+
+
 
         threadState.find(fdLookup)->second = false;
 
