@@ -29,10 +29,10 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
             response = quit_command();
             running = false;
         }
-        else if(command.find("cprivmsg") != std::string::npos)
-        {
-            response = cprivmsg_command();
-        }
+      //  else if(command.find("cprivmsg") != std::string::npos)
+     //   {
+     //      response = cprivmsg_command();
+    //    }
         else if(command.find("help") != std::string::npos)
         {
             std::cout << help_command() << std::endl;
@@ -84,7 +84,7 @@ std::string IRC_Client::cprivmsg_command()
 std::string IRC_Client::help_command()
 {
     std::string ret = "\nSupported Commands: \n";
-    ret += "\tCPRIVMSG\n";
+    //ret += "\tCPRIVMSG\n";
     ret += "\tHELP\n";
     ret += "\tJOIN\n";
     ret += "\tLIST\n";

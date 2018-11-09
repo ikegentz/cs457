@@ -40,6 +40,8 @@ namespace IRC_Server
     static std::map<std::string, IRC_Server::User> users;
     static std::mutex users_mutex;
 
+    static std::map<int, bool> threadState;
+
     //             channel_name    // set of users
     static std::map<std::string, std::set<std::string>> channels;
     static std::mutex channels_mutex;
@@ -69,6 +71,40 @@ namespace IRC_Server
     {
         std::string ret = "UNRECOGNIZED PROGRAM ARGUMENT: -" + selected;
         return ret;
+    }
+
+    void kick_user(std::string user)
+    {
+        if(users.find(user) == users.end())
+        {
+            std::cout << "Couldn't kick " << user << ". They aren't connected" << std::endl;
+            return;
+        }
+
+        std::lock_guard<std::mutex> guard(socketLookup_mutex);
+        int socketFD = socketLookup.find(user)->second;
+
+        std::string to_send = "[SERVER] You've been dropped\n";
+
+        // send to next user in the channel
+        std::lock_guard<std::mutex> guard2(clientSockets_mutex);
+        thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), to_send, false);
+        sendOthersUserThread.join();
+
+        // remove user's socket
+        int fdLookup = socketLookup.find(user)->second;
+        clientSockets.erase(fdLookup);
+
+        // remove user from channel
+        std::string curChannel = users.find(user)->second.current_channel;
+        std::lock_guard<std::mutex> guard3(channels_mutex);
+        channels.find(curChannel)->second.erase(user);
+
+        threadState.find(fdLookup)->second = false;
+
+        //remove this user from the user's list
+        std::lock_guard<std::mutex> guard4(users_mutex);
+        users.erase(user);
     }
 
     void add_user_to_channel(std::string channel_name, std::string nickname)
@@ -156,14 +192,11 @@ namespace IRC_Server
         thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
         sendThread.join();
 
-        //remove this user from the user's list
-        std::lock_guard<std::mutex> guard(users_mutex);
-        users.erase(nickname);
-
-        //TODO clean up channel that user was part of
-
         std::lock_guard<std::mutex> guard2(clientSockets_mutex);
         clientSocket.get()->closeSocket();
+
+        kick_user(nickname);
+
         std::cout << "\tSuccessfully closed the client\n";
     }
 
@@ -209,20 +242,37 @@ namespace IRC_Server
         }
     }
 
+    void join_new_channel(std::string channel_name, std::string user)
+    {
+
+    }
+
+    void client_list_command(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        std::string s = "[SERVER] All channels on the server - ";
+        for(auto it=channels.begin(); it != channels.end(); it++)
+        {
+            s += "#" + it->first + ", ";
+        }
+        s += "\n";
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
+        sendThread.join();
+    }
+
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, int threadID)
     {
         std::string msg;
         ssize_t val;
-        bool cont = true;
+        //bool cont = true;
         std::string nickname;
 
         // don't block, so that we can check read values and exit properly
 
-        while(cont)
+        while(threadState.find(threadID)->second)
         {
             // check if the server is still running
             if(!still_running)
-                cont = false;
+                threadState.find(threadID)->second = false;
 
             tie(msg, val) = clientSocket.get()->recvString();
 
@@ -230,14 +280,9 @@ namespace IRC_Server
             if(val <= 0)
                 continue;
 
-            // idk if we want to print anything here since we handle all cases in other functions
-//            else
-//                std::cout << "\n[SERVER]" << nickname << ": " << msg << std::endl;
-
-
             if(msg.substr(0,4) == "QUIT")
             {
-                quit_command(cont, nickname, clientSocket);
+                quit_command(threadState.find(threadID)->second, nickname, clientSocket);
                 return 0;
             }
             else if(msg.substr(0, 6) == "SERVER")
@@ -272,7 +317,7 @@ namespace IRC_Server
                  */
                 // See above comment (might be collapsed) why we exit here. In a nutshell, this creates a cycle, so
                 // one server must shut down
-                server_shutdown_command(ready, cont, still_running, clientSocket);
+                server_shutdown_command(ready, threadState.find(threadID)->second, still_running, clientSocket);
             }
             else if(msg.substr(0, 4) == "USER")
             {
@@ -284,6 +329,14 @@ namespace IRC_Server
             {
                 ping_command(clientSocket);
             }
+            else if(msg.substr(0,4) == "JOIN")
+            {
+
+            }
+            else if(msg.substr(0,4) == "LIST")
+            {
+                client_list_command(clientSocket);
+            }
             else
             {
                 // This is where we simply recieved a chat message. Broadcast to the channel...
@@ -292,14 +345,26 @@ namespace IRC_Server
             }
 
         }
-        clientSocket.get()->sendString("Server shutting down. Goodbye!");
+
+        // TODO this cleanup doesn't work quite right :/
+        clientSocket.get()->sendString("Goodbye!");
         clientSocket.get()->closeSocket();
 
+        // remove user's socket
+        int fdLookup = socketLookup.find(nickname)->second;
+        clientSockets.erase(fdLookup);
+
+        // remove user from channel
+        std::string curChannel = users.find(nickname)->second.current_channel;
+        std::lock_guard<std::mutex> guard3(channels_mutex);
+        channels.find(curChannel)->second.erase(nickname);
+
+        threadState.find(fdLookup)->second = false;
+
         //remove this user from the user's list
-        std::lock_guard<std::mutex> guard(users_mutex);
+        std::lock_guard<std::mutex> guard4(users_mutex);
         users.erase(nickname);
 
-        //TODO clean up channel that user was part of
         return 1;
     }
 
@@ -329,6 +394,7 @@ namespace IRC_Server
 
             unique_ptr<thread> t = make_unique<thread>(cclient, clientSockets.find(threadID)->second, threadID);
             threadList.push_back(std::move(t));
+            threadState.insert(std::pair<int, bool>(threadID, true));
             ++threadID;
         }
 
@@ -388,6 +454,17 @@ namespace IRC_Server
                 server_users_command();
             else if(input.find("/channels") != std::string::npos)
                 server_channels_command();
+            else if(input.find("/kick") != std::string::npos)
+            {
+                if(input.size() < 6)
+                    std::cout << "[SERVER] Provide a username to kick" << std::endl;
+                else
+                {
+                    std::vector<std::string> tokens;
+                    Utils::tokenize_line(input, tokens);
+                    kick_user(tokens[1]);
+                }
+            }
             else
                 std::cout << "[SERVER] Unrecognized command '" << input << "'" << std::endl;
 
