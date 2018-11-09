@@ -4,6 +4,8 @@
 
 #include "client_command_processor.h"
 #include "client_globals.h"
+#include "../utils/string_ops.h"
+
 
 
 std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string client_input, bool& running)
@@ -15,6 +17,8 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
     {
         std::string command = client_input.substr(1, client_input.find(" "));
         bool should_send = true;
+
+        std::cout << "COMMAND " << command << std::endl;
 
         if(command.find("list") != std::string::npos)
         {
@@ -37,10 +41,10 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
             response = quit_command();
             running = false;
         }
-      //  else if(command.find("cprivmsg") != std::string::npos)
-     //   {
-     //      response = cprivmsg_command();
-    //    }
+        else if(command.find("privmsg") != std::string::npos)
+        {
+           response = privmsg_command(client_input, should_send);
+        }
         else if(command.find("help") != std::string::npos)
         {
             std::cout << help_command() << std::endl;
@@ -86,15 +90,31 @@ std::string IRC_Client::quit_command()
     return "QUIT";
 }
 
-std::string IRC_Client::cprivmsg_command()
+std::string IRC_Client::privmsg_command(std::string input, bool& should_send)
 {
-    return "CPRIVMSG";
+    std::vector<std::string> tokens;
+    Utils::tokenize_line(input, tokens);
+
+    std::string ret = "PRIVMSG";
+
+    if(tokens.size() != 3)
+    {
+        std::cout << "[CLIENT] USAGE: /PRIVMSG <target> message\n" <<
+        "\tWhere <target> is either a username or a #channel" << std::endl;
+        should_send = false;
+        return "";
+    }
+
+    // only specified 1 target
+    ret += " " + tokens[1] + " " + tokens[2];
+
+    return ret;
 }
 
 std::string IRC_Client::help_command()
 {
     std::string ret = "\nSupported Commands: \n";
-    //ret += "\tCPRIVMSG\n";
+    ret += "\tPRIVMSG\n";
     ret += "\tHELP\n";
     ret += "\tJOIN\n";
     ret += "\tLIST\n";

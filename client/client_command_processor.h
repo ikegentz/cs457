@@ -9,7 +9,6 @@
 #include <iostream>
 #include <tuple>
 
-#include "../utils/string_ops.h"
 
 namespace IRC_Client
 {
@@ -18,7 +17,7 @@ namespace IRC_Client
     std::string list_command();
     std::string join_command(std::string);
     std::string quit_command();
-    std::string cprivmsg_command();
+    std::string privmsg_command(std::string, bool&);
     std::string help_command();
     std::string ping_command();
 }

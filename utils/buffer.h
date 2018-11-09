@@ -8,7 +8,7 @@
 #include <memory>
 #include <cstring>
 
-namespace IRC_Server
+namespace Utils
 {
     class Buffer
     {

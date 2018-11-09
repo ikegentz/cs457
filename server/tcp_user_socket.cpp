@@ -49,7 +49,7 @@ void IRC_Server::TCP_User_Socket::setUserInfoIPv4(string address, uint16_t port)
 
 std::tuple<string,ssize_t> IRC_Server::TCP_User_Socket::recvString(int bufferSize, bool useMutex)
 {
-    Buffer stringBuffer(bufferSize);
+    Utils::Buffer stringBuffer(bufferSize);
     stringBuffer.zero_out();
 
     ssize_t recvMsgSize;

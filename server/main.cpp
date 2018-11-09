@@ -213,7 +213,12 @@ namespace IRC_Server
 
     void send_to_channel(std::string nick, std::string message, std::string channel)
     {
+        if(channels.find(channel) == channels.end())
+            std::cout << "[SERVER] Couldn't find that channel to relay message to " << std::endl;
+
         auto users_send_to = channels.find(channel)->second;
+        if(users_send_to.size())
+
         for(std::string cur_user : users_send_to)
         {
             // don't send this message back to the same user
@@ -279,6 +284,31 @@ namespace IRC_Server
         s += "\n";
         thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
         sendThread.join();
+    }
+
+    void send_priv_message(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string message, std::string sending_user)
+    {
+        // send blank acknowledgement back to client we recieved message from
+        std::string s = "\n";
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
+        sendThread.join();
+
+        std::vector<std::string> tokens;
+        Utils::tokenize_line(message, tokens);
+
+        if(tokens[1].find("#") != std::string::npos)
+        {
+
+            std::string cur_channel = tokens[1].substr(1);
+            //std::cout << "[SERVER] " << nick << " on #" << cur_channel << " - " << message << std::endl;
+
+
+            std::string to_send = message + "\n";
+
+            std::cout << "Relaying " << message << " to " << cur_channel << std::endl;
+
+            send_to_channel(sending_user, to_send, cur_channel);
+        }
     }
 
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, int threadID)
@@ -360,6 +390,10 @@ namespace IRC_Server
             else if(msg.substr(0,4) == "LIST")
             {
                 client_list_command(clientSocket);
+            }
+            else if(msg.substr(0,7) == "PRIVMSG")
+            {
+                send_priv_message(clientSocket, msg, nickname);
             }
             else
             {

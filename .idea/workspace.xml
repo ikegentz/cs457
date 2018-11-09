@@ -10,8 +10,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec64dd51-a756-4345-9136-36de6f5ef36a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/client_command_processor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/client/client_command_processor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/client_command_processor.h" beforeDir="false" afterPath="$PROJECT_DIR$/client/client_command_processor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/tcp_client_socket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/client/tcp_client_socket.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/tcp_user_socket.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/tcp_user_socket.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/buffer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/utils/buffer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/buffer.h" beforeDir="false" afterPath="$PROJECT_DIR$/utils/buffer.h" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,27 +40,27 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="Makefile" value="22" />
-          <entry key="cpp" value="32" />
+          <entry key="cpp" value="34" />
           <entry key="gitignore" value="2" />
-          <entry key="h" value="27" />
+          <entry key="h" value="28" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="ObjectiveC" value="59" />
+          <entry key="ObjectiveC" value="62" />
           <entry key="PLAIN_TEXT" value="24" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="681" />
-          <entry key="cpp" value="29014" />
-          <entry key="h" value="2373" />
+          <entry key="cpp" value="31195" />
+          <entry key="h" value="2397" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="31387" />
+          <entry key="ObjectiveC" value="33592" />
           <entry key="PLAIN_TEXT" value="681" />
         </counts>
       </usages-collector>
@@ -66,8 +71,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="304">
-              <caret line="162" column="5" selection-start-line="162" selection-start-column="5" selection-end-line="162" selection-end-column="5" />
+            <state relative-caret-position="233">
+              <caret line="76" selection-start-line="76" selection-end-line="76" />
+              <folding>
+                <element signature="e#4447#7379#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -75,8 +83,35 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/tcp_client_socket.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="473">
-              <caret line="82" column="47" selection-start-line="82" selection-start-column="37" selection-end-line="82" selection-end-column="47" />
+            <state relative-caret-position="570">
+              <caret line="77" column="5" selection-start-line="77" selection-start-column="5" selection-end-line="77" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/buffer.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/utils/buffer.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="435">
+              <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server/tcp_server_socket.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15">
+              <caret line="1" column="12" selection-start-line="1" selection-start-column="12" selection-end-line="1" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -84,13 +119,16 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="86" column="45" lean-forward="true" selection-start-line="86" selection-start-column="45" selection-end-line="86" selection-end-column="45" />
+            <state relative-caret-position="664">
+              <caret line="307" column="53" selection-start-line="307" selection-start-column="53" selection-end-line="307" selection-end-column="53" />
               <folding>
                 <element signature="e#3378#4475#0" />
                 <element signature="e#4481#6242#0" />
                 <element signature="e#6248#6477#0" />
                 <element signature="e#6483#7144#0" />
+                <element signature="e#7150#7622#0" />
+                <element signature="e#9116#10109#0" />
+                <element signature="e#10115#10547#0" />
                 <element signature="e#11515#13435#0" />
               </folding>
             </state>
@@ -100,8 +138,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server/tcp_user_socket.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="72" column="47" selection-start-line="72" selection-start-column="37" selection-end-line="72" selection-end-column="47" />
+            <state relative-caret-position="57">
+              <caret line="51" column="11" selection-start-line="51" selection-start-column="11" selection-end-line="51" selection-end-column="11" />
             </state>
           </provider>
         </entry>
@@ -109,8 +147,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
+            <state relative-caret-position="285">
+              <caret line="19" column="50" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -118,38 +156,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/client_command_processor.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="615">
-              <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
+            <state relative-caret-position="604">
+              <caret line="108" column="45" selection-start-line="108" selection-start-column="45" selection-end-line="108" selection-end-column="45" />
               <folding>
                 <element signature="e#42#79#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/Makefile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" selection-start-line="10" selection-end-line="10" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/Makefile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="22" selection-start-line="22" selection-end-line="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/user.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="1" selection-start-line="17" selection-start-column="1" selection-end-line="18" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -167,14 +178,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>add_user_to</find>
-      <find>$</find>
-      <find>[CLIENT_LISTENER]</find>
-      <find>[COMMANDLET]</find>
-      <find>[SERVER]</find>
-      <find>on #</find>
-      <find>clientSockets</find>
-      <find>make_pair</find>
       <find>cclient</find>
       <find>add_user_to_channel</find>
       <find>recv</find>
@@ -190,13 +193,21 @@
       <find>should_send</find>
       <find>QUIT</find>
       <find>if v</find>
-      <find>sendString</find>
       <find>quit</find>
       <find>thread</find>
       <find>clientSockets.</find>
       <find>exit</find>
       <find>kick_user</find>
       <find>DEBUG</find>
+      <find>IRC_SERVER</find>
+      <find>buffer</find>
+      <find>sendString</find>
+      <find>token</find>
+      <find>send</find>
+      <find>socketLookup.find</find>
+      <find>join</find>
+      <find>send_pr</find>
+      <find>send_to_channel</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -210,6 +221,7 @@
       <replace>IRC_Client::TCP</replace>
       <replace>process_client_commands()</replace>
       <replace>[SERVER]</replace>
+      <replace>Utils</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -229,16 +241,18 @@
         <option value="$PROJECT_DIR$/client/tcp_client_socket.h" />
         <option value="$PROJECT_DIR$/client/client_globals.h" />
         <option value="$PROJECT_DIR$/client/Makefile" />
-        <option value="$PROJECT_DIR$/client/tcp_client_socket.cpp" />
         <option value="$PROJECT_DIR$/server/tcp_server_socket.cpp" />
         <option value="$PROJECT_DIR$/server/server_command_processor.h" />
-        <option value="$PROJECT_DIR$/server/tcp_user_socket.cpp" />
         <option value="$PROJECT_DIR$/utils/string_ops.h" />
         <option value="$PROJECT_DIR$/server/command_processor.h" />
         <option value="$PROJECT_DIR$/server/Makefile" />
         <option value="$PROJECT_DIR$/server/tcp_user_socket.h" />
         <option value="$PROJECT_DIR$/server/user.cpp" />
         <option value="$PROJECT_DIR$/server/user.h" />
+        <option value="$PROJECT_DIR$/utils/buffer.h" />
+        <option value="$PROJECT_DIR$/utils/buffer.cpp" />
+        <option value="$PROJECT_DIR$/server/tcp_user_socket.cpp" />
+        <option value="$PROJECT_DIR$/client/tcp_client_socket.cpp" />
         <option value="$PROJECT_DIR$/client/client_command_processor.h" />
         <option value="$PROJECT_DIR$/client/client_command_processor.cpp" />
         <option value="$PROJECT_DIR$/client/main.cpp" />
@@ -342,12 +356,12 @@
       <workItem from="1541634540802" duration="2062000" />
       <workItem from="1541641691500" duration="12073000" />
       <workItem from="1541722668684" duration="18122000" />
-      <workItem from="1541786668833" duration="5053000" />
+      <workItem from="1541786668833" duration="11790000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="95438000" />
+    <option name="totallyTimeSpent" value="102175000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="-1" width="1920" height="1080" extended-state="6" />
@@ -381,13 +395,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/utils/buffer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/chatClient.cpp" />
     <entry file="file://$PROJECT_DIR$/client/client_globals.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -407,13 +414,6 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/server/server_command_processor.h" />
-    <entry file="file://$PROJECT_DIR$/utils/buffer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/command_processor.h" />
     <entry file="file://$PROJECT_DIR$/utils/string_ops.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -436,34 +436,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/tcp_server_socket.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
-          <caret line="62" column="19" selection-start-line="62" selection-start-column="19" selection-end-line="62" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/Makefile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/client_command_processor.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="41" column="43" selection-start-line="41" selection-start-column="43" selection-end-line="41" selection-end-column="43" />
-          <folding>
-            <element signature="e#42#79#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -495,36 +471,80 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server/tcp_server_socket.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="1" column="12" selection-start-line="1" selection-start-column="12" selection-end-line="1" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/buffer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="25" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/buffer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="29" column="1" selection-start-line="29" selection-start-column="1" selection-end-line="29" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server/tcp_user_socket.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="72" column="47" selection-start-line="72" selection-start-column="37" selection-end-line="72" selection-end-column="47" />
+        <state relative-caret-position="57">
+          <caret line="51" column="11" selection-start-line="51" selection-start-column="11" selection-end-line="51" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/tcp_client_socket.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="473">
-          <caret line="82" column="47" selection-start-line="82" selection-start-column="37" selection-end-line="82" selection-end-column="47" />
+        <state relative-caret-position="570">
+          <caret line="77" column="5" selection-start-line="77" selection-start-column="5" selection-end-line="77" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="50" selection-start-line="19" selection-start-column="50" selection-end-line="19" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/client_command_processor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="604">
+          <caret line="108" column="45" selection-start-line="108" selection-start-column="45" selection-end-line="108" selection-end-column="45" />
+          <folding>
+            <element signature="e#42#79#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="304">
-          <caret line="162" column="5" selection-start-line="162" selection-start-column="5" selection-end-line="162" selection-end-column="5" />
+        <state relative-caret-position="233">
+          <caret line="76" selection-start-line="76" selection-end-line="76" />
+          <folding>
+            <element signature="e#4447#7379#0" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/server/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="86" column="45" lean-forward="true" selection-start-line="86" selection-start-column="45" selection-end-line="86" selection-end-column="45" />
+        <state relative-caret-position="664">
+          <caret line="307" column="53" selection-start-line="307" selection-start-column="53" selection-end-line="307" selection-end-column="53" />
           <folding>
             <element signature="e#3378#4475#0" />
             <element signature="e#4481#6242#0" />
             <element signature="e#6248#6477#0" />
             <element signature="e#6483#7144#0" />
+            <element signature="e#7150#7622#0" />
+            <element signature="e#9116#10109#0" />
+            <element signature="e#10115#10547#0" />
             <element signature="e#11515#13435#0" />
           </folding>
         </state>
