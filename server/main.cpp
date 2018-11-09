@@ -75,15 +75,21 @@ namespace IRC_Server
         // channel exists, so we add user to it
         if(channels.find(channel_name) != channels.end())
         {
-            std::set<std::string> channel = channels.find(channel_name)->second;
+            // get the iterator
+            auto channel = channels.find(channel_name);
+
             // sets are unique, so we can just insert here. If user is already in this channel, simply won't be inserted again
-            channel.insert(nickname);
+            channel->second.insert(nickname);
+
+            std::cout << "NUMBER OF USERS IN CHANNEL: " << channel->second.size() << std::endl;
         }
         else
         {
             std::set<std::string> channel;
             channel.insert(nickname);
             channels.insert(std::pair<std::string, std::set<std::string>>(channel_name, channel));
+            std::cout << "NUMBER OF USERS IN CHANNEL: " << channel.size() << std::endl;
+
         }
     }
 
@@ -172,14 +178,27 @@ namespace IRC_Server
         childTExit.join();
     }
 
-    void process_general_message(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    void process_general_message(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string nick, std::string message)
     {
         std::string s = "\n";
         thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
         sendThread.join();
 
         //TODO send chat message to channel
-        
+
+        std::string cur_channel = users.find(nick)->second.current_channel;
+        auto users_send_to = channels.find(nick)->second;
+
+        for(std::string cur_user : users_send_to)
+        {
+            // don't send this message back to the same user
+            if(nick.compare(cur_user) == 0)
+                continue;
+
+            std::cout << "SENDING MESSAGE TO " << cur_user << " ON CHANNEL " << cur_channel << std::endl;
+            //TODO get clientSocket for this user and send message
+        }
+
         std::cout << "\n\t $ ";
         std::cout.flush();
     }
@@ -259,7 +278,7 @@ namespace IRC_Server
             {
                 // This is where we simply recieved a chat message. Broadcast to the channel...
                 // send acknowledgement to client
-                process_general_message(clientSocket);
+                process_general_message(clientSocket, nickname, msg);
             }
 
         }
