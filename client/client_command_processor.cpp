@@ -33,6 +33,7 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
         }
         else if(command.find("quit") != std::string::npos)
         {
+            should_send = true;
             response = quit_command();
             running = false;
         }

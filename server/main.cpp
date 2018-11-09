@@ -210,19 +210,9 @@ namespace IRC_Server
         childTExit.join();
     }
 
-    void process_general_message(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string nick, std::string message)
+    void send_to_channel(std::string nick, std::string message, std::string channel)
     {
-        // send blank acknowledgement back to client we recieved message from
-        std::string s = "\n";
-        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
-        sendThread.join();
-
-        std::string cur_channel = users.find(nick)->second.current_channel;
-        auto users_send_to = channels.find(cur_channel)->second;
-        std::cout <<"[SERVER] " << nick << " on #" << cur_channel << " - " << message << std::endl;
-        std::cout << "[SERVER] Relaying to " << users_send_to.size()-1 << " users on #" << cur_channel << std::endl;
-
-
+        auto users_send_to = channels.find(channel)->second;
         for(std::string cur_user : users_send_to)
         {
             // don't send this message back to the same user
@@ -233,13 +223,25 @@ namespace IRC_Server
             std::lock_guard<std::mutex> guard(socketLookup_mutex);
             int socketFD = socketLookup.find(cur_user)->second;
 
-            std::string to_send = nick + " on #" + cur_channel + ": " + message + "\n";
-
             // send to next user in the channel
             std::lock_guard<std::mutex> guard2(clientSockets_mutex);
-            thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), to_send, false);
+            thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), message, false);
             sendOthersUserThread.join();
         }
+    }
+
+    void process_general_message(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string nick, std::string message)
+    {
+        // send blank acknowledgement back to client we recieved message from
+        std::string s = "\n";
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
+        sendThread.join();
+
+        std::string cur_channel = users.find(nick)->second.current_channel;
+        std::cout <<"[SERVER] " << nick << " on #" << cur_channel << " - " << message << std::endl;
+
+        std::string to_send = nick + " on #" + cur_channel + ": " + message + "\n";
+        send_to_channel(nick, to_send, cur_channel);
     }
 
     void join_new_channel(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string channel_name, std::string user)
@@ -261,6 +263,9 @@ namespace IRC_Server
 
         thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
         sendThread.join();
+
+        std::string to_channel = user + " left #" + curChan + "\n";
+        send_to_channel(user, to_channel, curChan);
     }
 
     void client_list_command(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)

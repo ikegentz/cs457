@@ -90,6 +90,8 @@ namespace IRC_Client
             if(v > 0 && msg != "\n")
                 std::cout << msg;
 
+
+
             if(!message_queue.empty())
             {
                 std::string message = next_message();
