@@ -97,7 +97,7 @@ std::string IRC_Client::privmsg_command(std::string input, bool& should_send)
 
     std::string ret = "PRIVMSG";
 
-    if(tokens.size() != 3)
+    if(tokens.size() < 3)
     {
         std::cout << "[CLIENT] USAGE: /PRIVMSG <target> message\n" <<
         "\tWhere <target> is either a username or a #channel" << std::endl;
@@ -105,8 +105,9 @@ std::string IRC_Client::privmsg_command(std::string input, bool& should_send)
         return "";
     }
 
-    // only specified 1 target
-    ret += " " + tokens[1] + " " + tokens[2];
+    for(unsigned i = 1; i < tokens.size(); ++i)
+        ret += " " + tokens[i];
+    ret += "\n";
 
     return ret;
 }

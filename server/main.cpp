@@ -296,18 +296,35 @@ namespace IRC_Server
         std::vector<std::string> tokens;
         Utils::tokenize_line(message, tokens);
 
+        std::string to_send = sending_user + " on #" + users.find(sending_user)->second.current_channel + ": ";
+        for(unsigned i = 2; i < tokens.size(); ++i)
+            to_send += tokens[i] + " ";
+        to_send += "\n";
+
         if(tokens[1].find("#") != std::string::npos)
         {
-
             std::string cur_channel = tokens[1].substr(1);
-            //std::cout << "[SERVER] " << nick << " on #" << cur_channel << " - " << message << std::endl;
 
-
-            std::string to_send = message + "\n";
-
-            std::cout << "Relaying " << message << " to " << cur_channel << std::endl;
-
+            std::cout << "[SERVER] Relaying private message from " << sending_user << " to #" << cur_channel << std::endl;
             send_to_channel(sending_user, to_send, cur_channel);
+        }
+        else
+        {
+            std::lock_guard<std::mutex> guard(socketLookup_mutex);
+
+            if(socketLookup.find(tokens[1]) == socketLookup.end())
+            {
+                std::cout << "[SERVER] Couldn't find that user to send message to" << std::endl;
+                return;
+            }
+
+            std::cout << "[SERVER] Relaying private message from " << sending_user << " to " << tokens[1] << std::endl;
+
+            int socketFD = socketLookup.find(tokens[1])->second;
+            // send to next user in the channel
+            std::lock_guard<std::mutex> guard2(clientSockets_mutex);
+            thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), to_send, false);
+            sendOthersUserThread.join();
         }
     }
 
