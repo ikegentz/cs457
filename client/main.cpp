@@ -80,28 +80,21 @@ namespace IRC_Client
         // process any messages that haven't been sent yet
         while(communicator_running || !IRC_Client::message_queue.empty())
         {
-            if(message_queue.empty())
-            {
-                // sleep for a bit before checking if there's something to send
-                std::this_thread::sleep_for(std::chrono::seconds(3));
-                continue;
-            }
-
-            std::string message = next_message();
-
-            // loop of trying to send message
+            // check if there's any new messages from the server
             ssize_t v;
-            do
+            std::string msg;
+            // this includes a timeout so we don't get stuck here for too long if we need to send something
+            tie(msg, v) = clientSocket->recvString(4096, false);
+
+            // print response from server, as long as it isn't just an empty acknowledgement
+            if(v > 0 && msg != "\n")
+                std::cout << msg;
+
+            if(!message_queue.empty())
             {
+                std::string message = next_message();
                 clientSocket->sendString(message, false);
-
-                std::string msg;
-                tie(msg, v) = clientSocket->recvString(4096, false);
-
-                // print response from server, as long as it isn't just an empty acknowledgement
-                if(v > 0 && msg != "\n")
-                    std::cout << msg << std::endl;
-            } while(v <= 0);
+            }
         }
     }
 

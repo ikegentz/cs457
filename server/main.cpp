@@ -145,7 +145,7 @@ namespace IRC_Server
 
     void ping_command(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
     {
-        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "[SERVER] PONG", true);
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "[SERVER] PONG\n", true);
         sendThread.join();
     }
 
