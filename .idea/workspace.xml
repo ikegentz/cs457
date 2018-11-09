@@ -10,6 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec64dd51-a756-4345-9136-36de6f5ef36a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -48,13 +49,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="681" />
-          <entry key="cpp" value="28310" />
+          <entry key="cpp" value="29014" />
           <entry key="h" value="2373" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="30683" />
+          <entry key="ObjectiveC" value="31387" />
           <entry key="PLAIN_TEXT" value="681" />
         </counts>
       </usages-collector>
@@ -83,8 +84,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="465">
-              <caret line="366" column="43" selection-start-line="366" selection-start-column="43" selection-end-line="366" selection-end-column="43" />
+            <state relative-caret-position="188">
+              <caret line="86" column="45" lean-forward="true" selection-start-line="86" selection-start-column="45" selection-end-line="86" selection-end-column="45" />
               <folding>
                 <element signature="e#3378#4475#0" />
                 <element signature="e#4481#6242#0" />
@@ -166,9 +167,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>add_user</find>
-      <find>rec</find>
-      <find>#general</find>
       <find>add_user_to</find>
       <find>$</find>
       <find>[CLIENT_LISTENER]</find>
@@ -195,7 +193,10 @@
       <find>sendString</find>
       <find>quit</find>
       <find>thread</find>
+      <find>clientSockets.</find>
+      <find>exit</find>
       <find>kick_user</find>
+      <find>DEBUG</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -341,12 +342,12 @@
       <workItem from="1541634540802" duration="2062000" />
       <workItem from="1541641691500" duration="12073000" />
       <workItem from="1541722668684" duration="18122000" />
-      <workItem from="1541786668833" duration="4121000" />
+      <workItem from="1541786668833" duration="5053000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="94506000" />
+    <option name="totallyTimeSpent" value="95438000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="-1" width="1920" height="1080" extended-state="6" />
@@ -517,8 +518,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="465">
-          <caret line="366" column="43" selection-start-line="366" selection-start-column="43" selection-end-line="366" selection-end-column="43" />
+        <state relative-caret-position="188">
+          <caret line="86" column="45" lean-forward="true" selection-start-line="86" selection-start-column="45" selection-end-line="86" selection-end-column="45" />
           <folding>
             <element signature="e#3378#4475#0" />
             <element signature="e#4481#6242#0" />

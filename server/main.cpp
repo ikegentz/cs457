@@ -73,7 +73,7 @@ namespace IRC_Server
         return ret;
     }
 
-    void kick_user(std::string user)
+    void kick_user(std::string user, std::string drop_message="")
     {
         if(users.find(user) == users.end())
         {
@@ -84,16 +84,17 @@ namespace IRC_Server
         std::lock_guard<std::mutex> guard(socketLookup_mutex);
         int socketFD = socketLookup.find(user)->second;
 
-        std::cout << "DEBUG Found the socket with ID: " << socketFD << std::endl;
-        std::cout << "DEBUG Current number of socketLookups: " << socketLookup.size() << " -- And num Sockets: " << clientSockets.size() << std::endl;
+        // notify user that they were removed
+        if(drop_message.size() > 1)
+        {
+            std::lock_guard<std::mutex> guard2(clientSockets_mutex);
+            thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), drop_message, false);
+            sendOthersUserThread.join();
+        }
 
         // remove user's socket
         clientSockets.erase(socketFD);
         socketLookup.erase(user);
-
-        std::cout << "DEBUG num sockets and stuff after erase" << std::endl;
-        std::cout << "DEBUG Found the socket with ID: " << socketFD << std::endl;
-        std::cout << "DEBUG Current number of socketLookups: " << socketLookup.size() << " -- And num Sockets: " << clientSockets.size() << std::endl;
 
         // remove user from channel
         std::string curChannel = users.find(user)->second.current_channel;
@@ -105,8 +106,6 @@ namespace IRC_Server
         //remove this user from the user's list
         std::lock_guard<std::mutex> guard4(users_mutex);
         users.erase(user);
-
-        std::cout << "DEBUG Erased user and set thread running state to false" << std::endl;
     }
 
     void add_user_to_channel(std::string channel_name, std::string nickname)
@@ -371,24 +370,6 @@ namespace IRC_Server
 
         }
 
-//        clientSocket.get()->sendString("Goodbye!");
-//        clientSocket.get()->closeSocket();
-//
-//        // remove user's socket
-//        int fdLookup = socketLookup.find(nickname)->second;
-//        clientSockets.erase(fdLookup);
-//
-//        // remove user from channel
-//        std::string curChannel = users.find(nickname)->second.current_channel;
-//        std::lock_guard<std::mutex> guard3(channels_mutex);
-//        channels.find(curChannel)->second.erase(nickname);
-//
-//        threadState.find(fdLookup)->second = false;
-//
-//        //remove this user from the user's list
-//        std::lock_guard<std::mutex> guard4(users_mutex);
-//        users.erase(nickname);
-
         return 1;
     }
 
@@ -411,6 +392,7 @@ namespace IRC_Server
                     goto quitThreads;
             } while(val == -1);
 
+            // TODO this is something that seems more like a log message than std::out
             std::cout << "[SERVER] Making new thread to handle this connection with ID: " << threadID << std::endl << std::endl;
 
             std::lock_guard<std::mutex> guard(clientSockets_mutex);
@@ -486,13 +468,13 @@ namespace IRC_Server
                 {
                     std::vector<std::string> tokens;
                     Utils::tokenize_line(input, tokens);
-                    kick_user(tokens[1]);
+                    kick_user(tokens[1], "[SERVER] You have been kicked!\n");
                 }
             }
             else
                 std::cout << "[SERVER] Unrecognized command '" << input << "'" << std::endl;
 
-        } while (input.find("/exit") != 0); // 'exit' command was typed
+        } while ((input.find("/exit") != 0) && (input.find("/quit") != 0)); // 'exit' command was typed
         still_running = false;
     }
 
@@ -500,6 +482,16 @@ namespace IRC_Server
     {
         std::cout << "[SERVER_COMANDLET] Shutting down the server." <<
                   " Current client connections will be closed." << std::endl;
+
+        // notify all clients that the server is shutting down
+        std::lock_guard<std::mutex> guard(channels_mutex);
+        std::string disconnectMessage = "[SERVER] Server has been shutdown. You wont' be able to communicate any longer!\n";
+        for (auto it = channels.begin(); it != channels.end(); ++it)
+        {
+            //              this will simply be ignored
+            //                   ^
+            send_to_channel("BAD-USERNAME", disconnectMessage, it->first);
+        }
     }
 }
 
