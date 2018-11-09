@@ -84,7 +84,6 @@ namespace IRC_Server
             // sets are unique, so we can just insert here. If user is already in this channel, simply won't be inserted again
             channel->second.insert(nickname);
 
-
             std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channels.find(channel_name)->second.size() << std::endl;
         }
         else
@@ -207,8 +206,6 @@ namespace IRC_Server
             std::lock_guard<std::mutex> guard2(clientSockets_mutex);
             thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), to_send, false);
             sendOthersUserThread.join();
-
-            std::cout << "SENT THE MESSAGE" << std::endl;
         }
     }
 
@@ -344,6 +341,28 @@ namespace IRC_Server
         std::cout << "[SERVER] Server shutting down, all clients disconnected" << std::endl;
     }
 
+    void server_users_command()
+    {
+        std::cout << "[SERVER] All users currently connected: " << std::endl;
+
+        std::lock_guard<std::mutex> guard(users_mutex);
+        for(auto it = users.begin(); it != users.end(); ++it)
+        {
+            std::cout << "\t" << it->first << "@" << it->second.ip_address << ":" << std::to_string(it->second.port) << std::endl;
+        }
+    }
+
+    void server_channels_command()
+    {
+        std::cout << "[SERVER] List of channels: " << std::endl;
+
+        std::lock_guard<std::mutex> guard(channels_mutex);
+        for(auto it = channels.begin(); it != channels.end(); ++it)
+        {
+            std::cout << "\t" << it->first << std::endl;
+        }
+    }
+
     void process_server_commands()
     {
         std::cout << "\n[SERVER] Control the server" << std::endl;
@@ -364,7 +383,15 @@ namespace IRC_Server
 
             // convert command to all lowercase
             std::transform(input.begin(), input.end(), input.begin(), ::tolower);
-        } while (input.find("exit") != 0); // 'exit' command was typed
+
+            if(input.find("/users") != std::string::npos)
+                server_users_command();
+            else if(input.find("/channels") != std::string::npos)
+                server_channels_command();
+            else
+                std::cout << "[SERVER] Unrecognized command '" << input << "'" << std::endl;
+
+        } while (input.find("/exit") != 0); // 'exit' command was typed
         still_running = false;
     }
 
@@ -372,7 +399,6 @@ namespace IRC_Server
     {
         std::cout << "[SERVER_COMANDLET] Shutting down the server." <<
                   " Current client connections will be closed." << std::endl;
-
     }
 }
 
