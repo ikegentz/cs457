@@ -242,9 +242,25 @@ namespace IRC_Server
         }
     }
 
-    void join_new_channel(std::string channel_name, std::string user)
+    void join_new_channel(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string channel_name, std::string user)
     {
+       // std::lock_guard<std::mutex> guard(channels_mutex);
+        // remove user from current channel
+        std::string curChan = users.find(user)->second.current_channel;
+        channels.find(curChan)->second.erase(user);
 
+        std::cout << user << " left #" << curChan << " and joined #" << channel_name << std::endl;
+
+        // add user to new channel
+        add_user_to_channel(channel_name, user);
+
+        //set users new channel
+        users.find(user)->second.current_channel = channel_name;
+
+        std::string s = "[SERVER] You left #" + curChan + " and joined #" + channel_name + "\n";
+
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
+        sendThread.join();
     }
 
     void client_list_command(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
@@ -331,7 +347,9 @@ namespace IRC_Server
             }
             else if(msg.substr(0,4) == "JOIN")
             {
-
+                std::vector<std::string> tokens;
+                Utils::tokenize_line(msg, tokens);
+                join_new_channel(clientSocket, tokens[1], nickname);
             }
             else if(msg.substr(0,4) == "LIST")
             {

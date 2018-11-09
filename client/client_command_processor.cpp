@@ -22,7 +22,14 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
         }
         else if(command.find("join") != std::string::npos)
         {
-            response = join_command();
+            if(client_input.size() < 6)
+            {
+                std::cout << "[CLIENT] Provide an channel for the JOIN command" << std::endl;
+                should_send = false;
+                response = "";
+            }
+            else
+                response = join_command(client_input);
         }
         else if(command.find("quit") != std::string::npos)
         {
@@ -66,9 +73,11 @@ std::string IRC_Client::list_command()
     return "LIST";
 }
 
-std::string IRC_Client::join_command()
+std::string IRC_Client::join_command(std::string input)
 {
-    return "JOIN";
+    std::vector<std::string> tokens;
+    Utils::tokenize_line(input, tokens);
+    return "JOIN " + tokens[1];
 }
 
 std::string IRC_Client::quit_command()

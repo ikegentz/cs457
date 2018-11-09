@@ -9,12 +9,14 @@
 #include <iostream>
 #include <tuple>
 
+#include "../utils/string_ops.h"
+
 namespace IRC_Client
 {
     std::tuple<std::string, bool> build_outgoing_message(std::string client_input, bool& running);
 
     std::string list_command();
-    std::string join_command();
+    std::string join_command(std::string);
     std::string quit_command();
     std::string cprivmsg_command();
     std::string help_command();
