@@ -88,9 +88,7 @@ namespace IRC_Server
         std::cout << "DEBUG Current number of socketLookups: " << socketLookup.size() << " -- And num Sockets: " << clientSockets.size() << std::endl;
 
         // remove user's socket
-        int fdLookup = socketLookup.find(user)->second;
-        clientSockets.erase(fdLookup);
-
+        clientSockets.erase(socketFD);
         socketLookup.erase(user);
 
         std::cout << "DEBUG num sockets and stuff after erase" << std::endl;
@@ -102,13 +100,13 @@ namespace IRC_Server
         std::lock_guard<std::mutex> guard3(channels_mutex);
         channels.find(curChannel)->second.erase(user);
 
-
-
-        threadState.find(fdLookup)->second = false;
+        threadState.find(socketFD)->second = false;
 
         //remove this user from the user's list
         std::lock_guard<std::mutex> guard4(users_mutex);
         users.erase(user);
+
+        std::cout << "DEBUG Erased user and set thread running state to false" << std::endl;
     }
 
     void add_user_to_channel(std::string channel_name, std::string nickname)
@@ -373,24 +371,23 @@ namespace IRC_Server
 
         }
 
-        // TODO this cleanup doesn't work quite right :/
-        clientSocket.get()->sendString("Goodbye!");
-        clientSocket.get()->closeSocket();
-
-        // remove user's socket
-        int fdLookup = socketLookup.find(nickname)->second;
-        clientSockets.erase(fdLookup);
-
-        // remove user from channel
-        std::string curChannel = users.find(nickname)->second.current_channel;
-        std::lock_guard<std::mutex> guard3(channels_mutex);
-        channels.find(curChannel)->second.erase(nickname);
-
-        threadState.find(fdLookup)->second = false;
-
-        //remove this user from the user's list
-        std::lock_guard<std::mutex> guard4(users_mutex);
-        users.erase(nickname);
+//        clientSocket.get()->sendString("Goodbye!");
+//        clientSocket.get()->closeSocket();
+//
+//        // remove user's socket
+//        int fdLookup = socketLookup.find(nickname)->second;
+//        clientSockets.erase(fdLookup);
+//
+//        // remove user from channel
+//        std::string curChannel = users.find(nickname)->second.current_channel;
+//        std::lock_guard<std::mutex> guard3(channels_mutex);
+//        channels.find(curChannel)->second.erase(nickname);
+//
+//        threadState.find(fdLookup)->second = false;
+//
+//        //remove this user from the user's list
+//        std::lock_guard<std::mutex> guard4(users_mutex);
+//        users.erase(nickname);
 
         return 1;
     }
