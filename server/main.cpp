@@ -81,14 +81,14 @@ namespace IRC_Server
             // sets are unique, so we can just insert here. If user is already in this channel, simply won't be inserted again
             channel->second.insert(nickname);
 
-            std::cout << "NUMBER OF USERS IN CHANNEL: " << channel->second.size() << std::endl;
+            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channel->second.size() << std::endl;
         }
         else
         {
             std::set<std::string> channel;
             channel.insert(nickname);
             channels.insert(std::pair<std::string, std::set<std::string>>(channel_name, channel));
-            std::cout << "NUMBER OF USERS IN CHANNEL: " << channel.size() << std::endl;
+            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channel.size() << std::endl;
 
         }
     }
@@ -117,9 +117,7 @@ namespace IRC_Server
         // user already exists. We will return and not add this user
         if(users.find(nick) != users.end())
         {
-            std::cout << "[SERVER] " << user.to_string() << " tried to connect. That nickname was already in use." << std::endl <<
-            "\n\t $ ";
-            std::cout.flush();
+            std::cout << "[SERVER] " << user.to_string() << " tried to connect. That nickname was already in use." << std::endl;
 
             std::string to_user = "[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.";
             thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
@@ -163,9 +161,7 @@ namespace IRC_Server
 
         std::lock_guard<std::mutex> guard2(clientSockets_mutex);
         clientSocket.get()->closeSocket();
-        std::cout << "\tSuccessfully closed the client\n" <<
-                  "\n\t $ ";
-        std::cout.flush();
+        std::cout << "\tSuccessfully closed the client\n";
     }
 
     void server_shutdown_command(bool& ready, bool& cont, bool& still_running, std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
@@ -189,6 +185,8 @@ namespace IRC_Server
         std::string cur_channel = users.find(nick)->second.current_channel;
         auto users_send_to = channels.find(nick)->second;
 
+        std::cout <<"[SERVER] " << nick << " on #" << cur_channel << " - " << message << std::endl;
+
         for(std::string cur_user : users_send_to)
         {
             // don't send this message back to the same user
@@ -198,9 +196,6 @@ namespace IRC_Server
             std::cout << "SENDING MESSAGE TO " << cur_user << " ON CHANNEL " << cur_channel << std::endl;
             //TODO get clientSocket for this user and send message
         }
-
-        std::cout << "\n\t $ ";
-        std::cout.flush();
     }
 
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
@@ -221,10 +216,12 @@ namespace IRC_Server
             tie(msg, val) = clientSocket.get()->recvString();
 
             // we will have a timeout if we dont' hear anything. In that case, continue on and try again
-            if(val > 0)
-                std::cout << "\n[CLIENT_LISTENER] " << nickname << ": " << msg << std::endl;
-            else
+            if(val <= 0)
                 continue;
+
+            // idk if we want to print anything here since we handle all cases in other functions
+//            else
+//                std::cout << "\n[SERVER]" << nickname << ": " << msg << std::endl;
 
 
             if(msg.substr(0,4) == "QUIT")
@@ -312,7 +309,7 @@ namespace IRC_Server
                     goto quitThreads;
             } while(val == -1);
 
-            std::cout << "[CLIENT_LISTENER] Making new thread to handle this connection with ID: " << threadID << std::endl << std::endl;
+            std::cout << "[SERVER] Making new thread to handle this connection with ID: " << threadID << std::endl << std::endl;
 
             std::lock_guard<std::mutex> guard(clientSockets_mutex);
             clientSockets[threadID] = clientSocket;
@@ -328,25 +325,24 @@ namespace IRC_Server
             t.get()->join();
         }
 
-        std::cout << "[CLIENT_LISTENER] Server shutting down, all clients disconnected" << std::endl;
+        std::cout << "[SERVER] Server shutting down, all clients disconnected" << std::endl;
     }
 
     void process_server_commands()
     {
-        std::cout << "\n[COMMANDLET] Control the server" << std::endl;
+        std::cout << "\n[SERVER] Control the server" << std::endl;
         std::cout << "\tEXIT - Shut down the server\n" <<
                   "\tUSERS - List currently connected users\n" <<
                   "\tCHANNELS - List channels and number of users\n" <<
                   "\tKICK - Kick a user from the server" << std::endl;
 
-        std::cout << "\n\tType server commands here:";
+        std::cout << "\n\tType server commands here:" << std::endl;
 
 
         char input_cstr[256];
         std::string input;
         do
         {
-            std::cout << "\n\t$ ";
             std::cin.getline(input_cstr, 256);
             input = std::string(input_cstr);
 
