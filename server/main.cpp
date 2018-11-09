@@ -30,6 +30,9 @@ namespace IRC_Server
     static std::unordered_map<int, std::shared_ptr<IRC_Server::TCP_User_Socket>> clientSockets;
     static std::mutex clientSockets_mutex;
 
+    static std::unordered_map<std::string, int> socketLookup;
+    static std::mutex socketLookup_mutex;
+
     static bool ready = true;
     static bool still_running = true;
     static unsigned threadID = 0;
@@ -81,7 +84,8 @@ namespace IRC_Server
             // sets are unique, so we can just insert here. If user is already in this channel, simply won't be inserted again
             channel->second.insert(nickname);
 
-            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channel->second.size() << std::endl;
+
+            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channels.find(channel_name)->second.size() << std::endl;
         }
         else
         {
@@ -176,16 +180,16 @@ namespace IRC_Server
 
     void process_general_message(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string nick, std::string message)
     {
+        // send blank acknowledgement back to client we recieved message from
         std::string s = "\n";
         thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, false);
         sendThread.join();
 
-        //TODO send chat message to channel
-
         std::string cur_channel = users.find(nick)->second.current_channel;
-        auto users_send_to = channels.find(nick)->second;
-
+        auto users_send_to = channels.find(cur_channel)->second;
         std::cout <<"[SERVER] " << nick << " on #" << cur_channel << " - " << message << std::endl;
+        std::cout << "[SERVER] Relaying to " << users_send_to.size()-1 << " users on #" << cur_channel << std::endl;
+
 
         for(std::string cur_user : users_send_to)
         {
@@ -193,12 +197,22 @@ namespace IRC_Server
             if(nick.compare(cur_user) == 0)
                 continue;
 
-            std::cout << "SENDING MESSAGE TO " << cur_user << " ON CHANNEL " << cur_channel << std::endl;
-            //TODO get clientSocket for this user and send message
+
+            std::lock_guard<std::mutex> guard(socketLookup_mutex);
+            int socketFD = socketLookup.find(cur_user)->second;
+
+            std::string to_send = nick + " on #" + cur_channel + ": " + message + "\n";
+
+            // send to next user in the channel
+            std::lock_guard<std::mutex> guard2(clientSockets_mutex);
+            thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), to_send, false);
+            sendOthersUserThread.join();
+
+            std::cout << "SENT THE MESSAGE" << std::endl;
         }
     }
 
-    int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, int threadID)
     {
         std::string msg;
         ssize_t val;
@@ -266,6 +280,8 @@ namespace IRC_Server
             else if(msg.substr(0, 4) == "USER")
             {
                 nickname = user_command(msg, clientSocket);
+                std::lock_guard<std::mutex> guard(socketLookup_mutex);
+                socketLookup.insert(std::pair<std::string, int>(nickname, threadID));
             }
             else if(msg.substr(0,4) == "PING")
             {
@@ -314,7 +330,7 @@ namespace IRC_Server
             std::lock_guard<std::mutex> guard(clientSockets_mutex);
             clientSockets[threadID] = clientSocket;
 
-            unique_ptr<thread> t = make_unique<thread>(cclient, clientSockets.find(threadID)->second);
+            unique_ptr<thread> t = make_unique<thread>(cclient, clientSockets.find(threadID)->second, threadID);
             threadList.push_back(std::move(t));
             ++threadID;
         }
