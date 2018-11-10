@@ -98,6 +98,32 @@ namespace IRC_Server
         return std::to_string(hour) + "hh:" + std::to_string(min) + "mm:" + std::to_string(sec) + "ss";
     }
 
+
+    void add_user_to_channel(std::string channel_name, std::string nickname)
+    {
+        std::lock_guard<std::mutex> guard(channels_mutex);
+
+        // channel exists, so we add user to it
+        if(channels.find(channel_name) != channels.end())
+        {
+            // get the iterator
+            auto channel = channels.find(channel_name);
+
+            // sets are unique, so we can just insert here. If user is already in this channel, simply won't be inserted again
+            channel->second.insert(nickname);
+
+            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channels.find(channel_name)->second.size() << std::endl;
+        }
+        else
+        {
+            std::set<std::string> channel;
+            channel.insert(nickname);
+            channels.insert(std::pair<std::string, std::set<std::string>>(channel_name, channel));
+            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channel.size() << std::endl;
+
+        }
+    }
+
     void kill_user(std::string user, std::string drop_message="")
     {
         if(users.find(user) == users.end())
@@ -133,29 +159,85 @@ namespace IRC_Server
         users.erase(user);
     }
 
-    void add_user_to_channel(std::string channel_name, std::string nickname)
+    void send_to_channel(std::string nick, std::string message, std::string channel)
     {
-        std::lock_guard<std::mutex> guard(channels_mutex);
+        if(channels.find(channel) == channels.end())
+            std::cout << "[SERVER] Couldn't find that channel to relay message to " << std::endl;
 
-        // channel exists, so we add user to it
-        if(channels.find(channel_name) != channels.end())
+        auto users_send_to = channels.find(channel)->second;
+        if(users_send_to.size())
+
+            for(std::string cur_user : users_send_to)
+            {
+                // don't send this message back to the same user
+                if(nick.compare(cur_user) == 0)
+                    continue;
+
+
+                std::lock_guard<std::mutex> guard(socketLookup_mutex);
+                int socketFD = socketLookup.find(cur_user)->second;
+
+                // send to next user in the channel
+                std::lock_guard<std::mutex> guard2(clientSockets_mutex);
+                thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), message, false);
+                sendOthersUserThread.join();
+            }
+    }
+
+
+    void join_new_channel(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string channel_name, std::string user)
+    {
+        // std::lock_guard<std::mutex> guard(channels_mutex);
+        // remove user from current channel
+        std::string curChan = users.find(user)->second.current_channel;
+        channels.find(curChan)->second.erase(user);
+
+        std::cout "[SERVER] " << user << " left #" << curChan << " and joined #" << channel_name << std::endl;
+
+        // add user to new channel
+        add_user_to_channel(channel_name, user);
+
+        //set users new channel
+        users.find(user)->second.current_channel = channel_name;
+
+        std::string s = "[SERVER] You left #" + curChan + " and joined #" + channel_name + "\n";
+
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
+        sendThread.join();
+
+        std::string to_channel = user + " left #" + curChan + "\n";
+        send_to_channel(user, to_channel, curChan);
+    }
+
+    void kick_user(std::string calling_user, std::string user)
+    {
+        if(calling_user != "[SERVER]")
         {
-            // get the iterator
-            auto channel = channels.find(channel_name);
+            // make sure calling user is actually part of the channel
+            User kicker = users.find(calling_user)->second;
+            User kickee = users.find(user)->second;
 
-            // sets are unique, so we can just insert here. If user is already in this channel, simply won't be inserted again
-            channel->second.insert(nickname);
-
-            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channels.find(channel_name)->second.size() << std::endl;
+            if(kicker.current_channel != kickee.current_channel)
+            {
+                std::cout << "Couldn't kick " << user << ". They aren't in the same channel as the kick initiator" << std::endl;
+                return;
+            }
         }
-        else
+
+        if(users.find(user) == users.end())
         {
-            std::set<std::string> channel;
-            channel.insert(nickname);
-            channels.insert(std::pair<std::string, std::set<std::string>>(channel_name, channel));
-            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channel.size() << std::endl;
-
+            std::cout << "Couldn't kick " << user << ". They aren't connected" << std::endl;
+            return;
         }
+
+        int socketFD = socketLookup.find(user)->second;
+
+        std::string s = "You've been kicked from your current channel!\n";
+        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second, s, true);
+        sendThread.join();
+
+        join_new_channel(clientSockets.find(socketFD)->second, "general", user);
+
     }
 
     std::string user_command(std::string input, std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
@@ -236,31 +318,6 @@ namespace IRC_Server
         childTExit.join();
     }
 
-    void send_to_channel(std::string nick, std::string message, std::string channel)
-    {
-        if(channels.find(channel) == channels.end())
-            std::cout << "[SERVER] Couldn't find that channel to relay message to " << std::endl;
-
-        auto users_send_to = channels.find(channel)->second;
-        if(users_send_to.size())
-
-        for(std::string cur_user : users_send_to)
-        {
-            // don't send this message back to the same user
-            if(nick.compare(cur_user) == 0)
-                continue;
-
-
-            std::lock_guard<std::mutex> guard(socketLookup_mutex);
-            int socketFD = socketLookup.find(cur_user)->second;
-
-            // send to next user in the channel
-            std::lock_guard<std::mutex> guard2(clientSockets_mutex);
-            thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSockets.find(socketFD)->second.get(), message, false);
-            sendOthersUserThread.join();
-        }
-    }
-
     void process_general_message(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string nick, std::string message)
     {
         // send blank acknowledgement back to client we recieved message from
@@ -273,30 +330,6 @@ namespace IRC_Server
 
         std::string to_send = nick + " on #" + cur_channel + ": " + message + "\n";
         send_to_channel(nick, to_send, cur_channel);
-    }
-
-    void join_new_channel(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string channel_name, std::string user)
-    {
-       // std::lock_guard<std::mutex> guard(channels_mutex);
-        // remove user from current channel
-        std::string curChan = users.find(user)->second.current_channel;
-        channels.find(curChan)->second.erase(user);
-
-        std::cout << user << " left #" << curChan << " and joined #" << channel_name << std::endl;
-
-        // add user to new channel
-        add_user_to_channel(channel_name, user);
-
-        //set users new channel
-        users.find(user)->second.current_channel = channel_name;
-
-        std::string s = "[SERVER] You left #" + curChan + " and joined #" + channel_name + "\n";
-
-        thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
-        sendThread.join();
-
-        std::string to_channel = user + " left #" + curChan + "\n";
-        send_to_channel(user, to_channel, curChan);
     }
 
     void client_list_command(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
@@ -524,6 +557,12 @@ namespace IRC_Server
                 Utils::tokenize_line(msg, tokens);
                 kill_user(tokens[1], "You have been killed by " + nickname);
             }
+            else if(msg.substr(0,4) == "KICK")
+            {
+                std::vector<std::string> tokens;
+                Utils::tokenize_line(msg, tokens);
+                kick_user(nickname, tokens[1]);
+            }
             else if(msg.substr(0,4) == "TIME")
             {
                 send_server_time(clientSocket);
@@ -640,6 +679,17 @@ namespace IRC_Server
                     std::vector<std::string> tokens;
                     Utils::tokenize_line(input, tokens);
                     kill_user(tokens[1], "[SERVER] You have been killed!\n");
+                }
+            }
+            else if(input.find("/kick") != std::string::npos)
+            {
+                if(input.size() < 6)
+                    std::cout << "[SERVER] Provide a username to kill" << std::endl;
+                else
+                {
+                    std::vector<std::string> tokens;
+                    Utils::tokenize_line(input, tokens);
+                    kick_user("[SERVER]", tokens[1]);
                 }
             }
             else

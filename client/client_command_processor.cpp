@@ -87,6 +87,10 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
         {
             response = kill_command(client_input, should_send);
         }
+        else if(command.find("kick") != std::string::npos)
+        {
+            response = kick_command(client_input, should_send);
+        }
         else
         {
             std::cout << "[CLIENT] Unrecognized command '" + command + "'" << std::endl;
@@ -213,6 +217,23 @@ std::string IRC_Client::kill_command(std::string input, bool& should_send)
 
     should_send = true;
     return "KILL " + tokens[1];
+}
+
+std::string IRC_Client::kick_command(std::string input, bool& should_send)
+{
+    std::vector<std::string> tokens;
+    Utils::tokenize_line(input, tokens);
+
+    if(tokens.size() != 2)
+    {
+        std::cout << "[CLIENT] Specify a user for this command" << std::endl;
+        std::cout << "\t/KICK <user>" << std::endl;
+        should_send = false;
+        return "";
+    }
+
+    should_send = true;
+    return "KICK " + tokens[1];
 }
 
 std::string IRC_Client::help_command()
