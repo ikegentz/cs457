@@ -10,17 +10,20 @@
 #include <unordered_map>
 #include <map>
 #include <set>
+#include <time.h>
 
 
 #include "tcp_server_socket.h"
 #include "tcp_user_socket.h"
 #include "user.h"
+#include "server_info.h"
 #include "../utils/string_ops.h"
 
 #define DEBUG false
 
 namespace IRC_Server
 {
+    static ServerInfo serverInfo;
     const static unsigned DEFAULT_SERVER_PORT = 1997;
     const static std::string DEFAULT_CONFPATH = "/conf";
     const static std::string DEFAULT_LOGPATH = "/logs";
@@ -71,6 +74,28 @@ namespace IRC_Server
     {
         std::string ret = "UNRECOGNIZED PROGRAM ARGUMENT: -" + selected;
         return ret;
+    }
+
+    std::string get_current_day()
+    {
+        time_t theTime = time(NULL);
+        struct tm *aTime = localtime(&theTime);
+        int day = aTime->tm_mday;
+        int month = aTime->tm_mon + 1;
+        int year = aTime->tm_year + 1990;
+
+        return std::to_string(month) + "/" + std::to_string(day) + "/" + std::to_string(year);
+    }
+
+    std::string get_current_time()
+    {
+        time_t theTime = time(NULL);
+        struct tm *aTime = localtime(&theTime);
+        int hour = aTime->tm_hour;
+        int min = aTime->tm_min;
+        int sec = aTime->tm_sec;
+
+        return std::to_string(hour) + "hh:" + std::to_string(min) + "mm:" + std::to_string(sec) + "ss";
     }
 
     void kick_user(std::string user, std::string drop_message="")
@@ -328,6 +353,71 @@ namespace IRC_Server
         }
     }
 
+    void send_server_info(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        std::string to_send = "[SERVER] " + serverInfo.to_string() + "\n";
+        thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket, to_send, false);
+        sendOthersUserThread.join();
+    }
+
+    void send_server_time(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        std::string to_send = "[SERVER] " + IRC_Server::get_current_time() + "\n";
+        thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket, to_send, false);
+        sendOthersUserThread.join();
+    }
+
+    void send_user_ip(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string message)
+    {
+        std::vector<std::string> tokens;
+        Utils::tokenize_line(message, tokens);
+
+        std::string to_send;
+        if(users.find(tokens[1]) == users.end())
+            to_send = "[SERVER] Sorry, that user isn't logged in right now\n";
+        else
+            to_send = "[SERVER] " + tokens[1] + " - " + users.find(tokens[1])->second.ip_address + "\n";
+
+        thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket, to_send, false);
+        sendOthersUserThread.join();
+
+    }
+
+    void send_user_host_info(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string message)
+    {
+        std::vector<std::string> tokens;
+        Utils::tokenize_line(message, tokens);
+
+        std::string to_send;
+        if(users.find(tokens[1]) == users.end())
+            to_send = "[SERVER] Sorry, that user isn't logged in right now\n";
+        else
+            to_send = "[SERVER] " + tokens[1] + " - " + users.find(tokens[1])->second.to_string() + "\n";
+
+        thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket, to_send, false);
+        sendOthersUserThread.join();
+    }
+
+
+    void send_server_version(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        std::string to_send = "[SERVER] " + serverInfo.version + "\n";
+        thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket, to_send, false);
+        sendOthersUserThread.join();
+    }
+
+    void send_users_info(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
+    {
+        std::string to_send = "[SERVER] ";
+        for(auto it = users.begin(); it != users.end(); ++it)
+        {
+            to_send += it->second.to_string() + " - ";
+        }
+        to_send += "\n";
+        thread sendOthersUserThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket, to_send, false);
+        sendOthersUserThread.join();
+    }
+
     int cclient(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, int threadID)
     {
         std::string msg;
@@ -388,6 +478,18 @@ namespace IRC_Server
                 // one server must shut down
                 server_shutdown_command(ready, threadState.find(threadID)->second, still_running, clientSocket);
             }
+            else if(msg.substr(0,8) == "USERHOST")
+            {
+                send_user_host_info(clientSocket, msg);
+            }
+            else if(msg.substr(0,6) == "USERIP")
+            {
+                send_user_ip(clientSocket, msg);
+            }
+            else if(msg.substr(0,5) == "USERS")
+            {
+                send_users_info(clientSocket);
+            }
             else if(msg.substr(0, 4) == "USER")
             {
                 nickname = user_command(msg, clientSocket);
@@ -411,6 +513,18 @@ namespace IRC_Server
             else if(msg.substr(0,7) == "PRIVMSG")
             {
                 send_priv_message(clientSocket, msg, nickname);
+            }
+            else if(msg.substr(0,4) == "INFO")
+            {
+                send_server_info(clientSocket);
+            }
+            else if(msg.substr(0,4) == "TIME")
+            {
+                send_server_time(clientSocket);
+            }
+            else if(msg.substr(0,7) == "VERSION")
+            {
+                send_server_version(clientSocket);
             }
             else
             {
@@ -574,6 +688,11 @@ int main(int argc, char **argv)
                 exit(1);
         }
     }
+
+
+    IRC_Server::serverInfo.start_time = IRC_Server::get_current_time() + " on " + IRC_Server::get_current_day() ;
+    IRC_Server::serverInfo.patch_level = "2.2";
+    IRC_Server::serverInfo.version = "1.0";
 
     std::cout << "Starting the server...\n" << std::endl;
     IRC_Server::TCP_Server_Socket socket1(IRC_Server::DEFAULT_SERVER_PORT);

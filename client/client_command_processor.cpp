@@ -55,6 +55,34 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
             response = ping_command();
             should_send = true;
         }
+        else if(command.find("info") != std::string::npos)
+        {
+            response = info_command();
+            should_send = true;
+        }
+        else if(command.find("time") != std::string::npos)
+        {
+            response = time_command();
+            should_send = true;
+        }
+        else if(command.find("userip") != std::string::npos)
+        {
+            response = user_ip_command(client_input, should_send);
+        }
+        else if(command.find("userhost") != std::string::npos)
+        {
+            response = user_host_command(client_input, should_send);
+        }
+        else if(command.find("version") != std::string::npos)
+        {
+            should_send = true;
+            response = version_command();
+        }
+        else if(command.find("users") != std::string::npos)
+        {
+            should_send = true;
+            response = users_command();
+        }
         else
         {
             std::cout << "[CLIENT] Unrecognized command '" + command + "'" << std::endl;
@@ -112,6 +140,60 @@ std::string IRC_Client::privmsg_command(std::string input, bool& should_send)
     return ret;
 }
 
+std::string IRC_Client::info_command()
+{
+    return "INFO";
+}
+
+std::string IRC_Client::time_command()
+{
+    return "TIME";
+}
+
+std::string IRC_Client::user_ip_command(std::string input, bool& should_send)
+{
+    std::vector<std::string> tokens;
+    Utils::tokenize_line(input, tokens);
+
+    if(tokens.size() != 2)
+    {
+        std::cout << "[CLIENT] Specify a user for this command" << std::endl;
+        std::cout << "\t/USERIP <user>" << std::endl;
+        should_send = false;
+        return "";
+    }
+
+    should_send = true;
+    return "USERIP " + tokens[1];
+}
+
+std::string IRC_Client::user_host_command(std::string input, bool& should_send)
+{
+    std::vector<std::string> tokens;
+    Utils::tokenize_line(input, tokens);
+
+    if(tokens.size() != 2)
+    {
+        std::cout << "[CLIENT] Specify a user for this command" << std::endl;
+        std::cout << "\t/USERHOST <user>" << std::endl;
+        should_send = false;
+        return "";
+    }
+
+    should_send = true;
+    return "USERHOST " + tokens[1];
+}
+
+std::string IRC_Client::version_command()
+{
+    return "VERSION";
+}
+
+std::string IRC_Client::users_command()
+{
+    return "USERS";
+}
+
 std::string IRC_Client::help_command()
 {
     std::string ret = "\nSupported Commands: \n";
@@ -120,5 +202,11 @@ std::string IRC_Client::help_command()
     ret += "\tJOIN\n";
     ret += "\tLIST\n";
     ret += "\tQUIT\n";
+    ret += "\tINFO\n";
+    ret += "\tTIME\n";
+    ret += "\tUSERIP\n";
+    ret += "\tUSERS\n";
+    ret += "\tUSERHOST\n";
+    ret += "\tVERSION\n";
     return ret;
 }
