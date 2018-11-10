@@ -98,11 +98,11 @@ namespace IRC_Server
         return std::to_string(hour) + "hh:" + std::to_string(min) + "mm:" + std::to_string(sec) + "ss";
     }
 
-    void kick_user(std::string user, std::string drop_message="")
+    void kill_user(std::string user, std::string drop_message="")
     {
         if(users.find(user) == users.end())
         {
-            std::cout << "Couldn't kick " << user << ". They aren't connected" << std::endl;
+            std::cout << "Couldn't kill " << user << ". They aren't connected" << std::endl;
             return;
         }
 
@@ -221,7 +221,7 @@ namespace IRC_Server
         std::lock_guard<std::mutex> guard2(clientSockets_mutex);
         clientSocket.get()->closeSocket();
 
-        kick_user(nickname);
+        kill_user(nickname);
 
         std::cout << "\tSuccessfully closed the client\n";
     }
@@ -518,6 +518,12 @@ namespace IRC_Server
             {
                 send_server_info(clientSocket);
             }
+            else if(msg.substr(0,4) == "KILL")
+            {
+                std::vector<std::string> tokens;
+                Utils::tokenize_line(msg, tokens);
+                kill_user(tokens[1], "You have been killed by " + nickname);
+            }
             else if(msg.substr(0,4) == "TIME")
             {
                 send_server_time(clientSocket);
@@ -606,7 +612,7 @@ namespace IRC_Server
         std::cout << "\tEXIT - Shut down the server\n" <<
                   "\tUSERS - List currently connected users\n" <<
                   "\tCHANNELS - List channels and number of users\n" <<
-                  "\tKICK - Kick a user from the server" << std::endl;
+                  "\tKILL - kill a user from the server" << std::endl;
 
         std::cout << "\n\tType server commands here:" << std::endl;
 
@@ -625,15 +631,15 @@ namespace IRC_Server
                 server_users_command();
             else if(input.find("/channels") != std::string::npos)
                 server_channels_command();
-            else if(input.find("/kick") != std::string::npos)
+            else if(input.find("/kill") != std::string::npos)
             {
                 if(input.size() < 6)
-                    std::cout << "[SERVER] Provide a username to kick" << std::endl;
+                    std::cout << "[SERVER] Provide a username to kill" << std::endl;
                 else
                 {
                     std::vector<std::string> tokens;
                     Utils::tokenize_line(input, tokens);
-                    kick_user(tokens[1], "[SERVER] You have been kicked!\n");
+                    kill_user(tokens[1], "[SERVER] You have been killed!\n");
                 }
             }
             else

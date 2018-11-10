@@ -10,8 +10,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec64dd51-a756-4345-9136-36de6f5ef36a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/server/server_info.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/client_command_processor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/client/client_command_processor.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/client_command_processor.h" beforeDir="false" afterPath="$PROJECT_DIR$/client/client_command_processor.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.cpp" afterDir="false" />
@@ -53,13 +51,13 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="681" />
-          <entry key="cpp" value="35071" />
-          <entry key="h" value="2860" />
+          <entry key="cpp" value="35305" />
+          <entry key="h" value="2927" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="37931" />
+          <entry key="ObjectiveC" value="38232" />
           <entry key="PLAIN_TEXT" value="681" />
         </counts>
       </usages-collector>
@@ -91,8 +89,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="503">
-              <caret line="394" column="96" selection-start-line="394" selection-start-column="96" selection-end-line="394" selection-end-column="96" />
+            <state relative-caret-position="567">
+              <caret line="524" column="35" selection-start-line="524" selection-start-column="35" selection-end-line="524" selection-end-column="35" />
               <folding>
                 <element signature="e#1226#1984#0" />
                 <element signature="e#1990#2133#0" />
@@ -114,7 +112,6 @@
                 <element signature="e#16979#18491#0" />
                 <element signature="e#18497#18884#0" />
                 <element signature="e#18890#19202#0" />
-                <element signature="e#19208#20867#0" />
               </folding>
             </state>
           </provider>
@@ -151,7 +148,7 @@
         <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="570">
-              <caret line="38" column="72" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="72" />
+              <caret line="38" column="45" selection-start-line="38" selection-end-line="39" />
             </state>
           </provider>
         </entry>
@@ -159,8 +156,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/client_command_processor.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1256">
-              <caret line="73" column="68" selection-start-line="73" selection-start-column="68" selection-end-line="73" selection-end-column="68" />
+            <state relative-caret-position="510">
+              <caret line="211" column="5" lean-forward="true" selection-start-line="211" selection-start-column="5" selection-end-line="211" selection-end-column="5" />
               <folding>
                 <element signature="e#42#79#0" expanded="true" />
               </folding>
@@ -186,8 +183,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>PONG</find>
-      <find>/user</find>
       <find>server_users_command</find>
       <find>TODO</find>
       <find>cont</find>
@@ -214,8 +209,10 @@
       <find>sendString</find>
       <find>tokenis</find>
       <find>userip</find>
-      <find>send</find>
       <find>user</find>
+      <find>send</find>
+      <find>kick</find>
+      <find>kill</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -230,6 +227,7 @@
       <replace>process_client_commands()</replace>
       <replace>[SERVER]</replace>
       <replace>Utils</replace>
+      <replace>kill</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -263,8 +261,8 @@
         <option value="$PROJECT_DIR$/client/tcp_client_socket.cpp" />
         <option value="$PROJECT_DIR$/client/main.cpp" />
         <option value="$PROJECT_DIR$/server/server_info.h" />
-        <option value="$PROJECT_DIR$/client/client_command_processor.cpp" />
         <option value="$PROJECT_DIR$/client/client_command_processor.h" />
+        <option value="$PROJECT_DIR$/client/client_command_processor.cpp" />
         <option value="$PROJECT_DIR$/server/main.cpp" />
       </list>
     </option>
@@ -366,12 +364,12 @@
       <workItem from="1541641691500" duration="12073000" />
       <workItem from="1541722668684" duration="18122000" />
       <workItem from="1541786668833" duration="13204000" />
-      <workItem from="1541870334943" duration="4200000" />
+      <workItem from="1541870334943" duration="5158000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="107789000" />
+    <option name="totallyTimeSpent" value="108747000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="-1" width="1920" height="1080" extended-state="6" />
@@ -536,14 +534,14 @@
     <entry file="file://$PROJECT_DIR$/client/client_command_processor.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="570">
-          <caret line="38" column="72" selection-start-line="38" selection-start-column="72" selection-end-line="38" selection-end-column="72" />
+          <caret line="38" column="45" selection-start-line="38" selection-end-line="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/client_command_processor.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1256">
-          <caret line="73" column="68" selection-start-line="73" selection-start-column="68" selection-end-line="73" selection-end-column="68" />
+        <state relative-caret-position="510">
+          <caret line="211" column="5" lean-forward="true" selection-start-line="211" selection-start-column="5" selection-end-line="211" selection-end-column="5" />
           <folding>
             <element signature="e#42#79#0" expanded="true" />
           </folding>
@@ -552,8 +550,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="503">
-          <caret line="394" column="96" selection-start-line="394" selection-start-column="96" selection-end-line="394" selection-end-column="96" />
+        <state relative-caret-position="567">
+          <caret line="524" column="35" selection-start-line="524" selection-start-column="35" selection-end-line="524" selection-end-column="35" />
           <folding>
             <element signature="e#1226#1984#0" />
             <element signature="e#1990#2133#0" />
@@ -575,7 +573,6 @@
             <element signature="e#16979#18491#0" />
             <element signature="e#18497#18884#0" />
             <element signature="e#18890#19202#0" />
-            <element signature="e#19208#20867#0" />
           </folding>
         </state>
       </provider>

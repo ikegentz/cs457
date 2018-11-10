@@ -36,6 +36,8 @@ namespace IRC_Client
 
     std::string users_command();
 
+    std::string kill_command(std::string input, bool&);
+
     std::string user_host_command(std::string input, bool &should_send);
 }
 
