@@ -26,9 +26,10 @@ namespace IRC_Server
 {
     static ServerInfo serverInfo;
     const static unsigned DEFAULT_SERVER_PORT = 1997;
-    const static std::string DEFAULT_CONFPATH = "server.conf";
-    const static std::string DEFAULT_LOGPATH = "server.log";
+    const static std::string DEFAULT_CONFPATH = "conf/server.conf";
+    const static std::string DEFAULT_LOGPATH = "log/server.log";
     const static std::string DEFAULT_DB_PATH = "db/";
+    const static std::string DEFAULT_BANNER = "Welcome to the server!\n";
 
     static std::vector<std::unique_ptr<thread>> threadList;
 
@@ -47,9 +48,16 @@ namespace IRC_Server
 
     static std::map<int, bool> threadState;
 
+    static std::map<std::string, int> banned_users;
+
+    static std::string log_path = DEFAULT_LOGPATH;
+    static bool should_log = true;
+
     //             channel_name    // set of users
     static std::map<std::string, std::set<std::string>> channels;
     static std::mutex channels_mutex;
+
+    std::string server_banner = DEFAULT_BANNER;
 
     std::string usage()
     {
@@ -100,6 +108,34 @@ namespace IRC_Server
         return std::to_string(hour) + "hh:" + std::to_string(min) + "mm:" + std::to_string(sec) + "ss";
     }
 
+    void print_and_log(std::string output)
+    {
+        if(should_log)
+        {
+            std::fstream fs;
+            fs.open (log_path, std::fstream::out | std::fstream::app);
+
+            // append to log file
+            fs << output << std::endl;
+            fs.close();
+        }
+
+        // do the actual print to terminal
+        std::cout << output << std::endl;
+    }
+
+    void log_only(std::string output)
+    {
+        if(should_log)
+        {
+            std::fstream fs;
+            fs.open (log_path, std::fstream::out | std::fstream::app);
+
+            // append to log file
+            fs << output << std::endl;
+            fs.close();
+        }
+    }
 
     void add_user_to_channel(std::string channel_name, std::string nickname)
     {
@@ -114,14 +150,14 @@ namespace IRC_Server
             // sets are unique, so we can just insert here. If user is already in this channel, simply won't be inserted again
             channel->second.insert(nickname);
 
-            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channels.find(channel_name)->second.size() << std::endl;
+            print_and_log("[SERVER] User " + nickname + " joined channel #" + channel_name + ". Number of users in channel: " + std::to_string(channels.find(channel_name)->second.size()) );
         }
         else
         {
             std::set<std::string> channel;
             channel.insert(nickname);
             channels.insert(std::pair<std::string, std::set<std::string>>(channel_name, channel));
-            std::cout << "[SERVER] User " << nickname << " joined channel #" << channel_name << ". Number of users in channel: " << channel.size() << std::endl;
+            print_and_log("[SERVER] User " + nickname + " joined channel #" + channel_name + ". Number of users in channel: " + std::to_string(channel.size()) );
 
         }
     }
@@ -130,7 +166,7 @@ namespace IRC_Server
     {
         if(users.find(user) == users.end())
         {
-            std::cout << "Couldn't kill " << user << ". They aren't connected" << std::endl;
+            print_and_log("Couldn't kill " + user + ". They aren't connected" );
             return;
         }
 
@@ -164,7 +200,7 @@ namespace IRC_Server
     void send_to_channel(std::string nick, std::string message, std::string channel)
     {
         if(channels.find(channel) == channels.end())
-            std::cout << "[SERVER] Couldn't find that channel to relay message to " << std::endl;
+            print_and_log("[SERVER] Couldn't find that channel to relay message to " );
 
         auto users_send_to = channels.find(channel)->second;
         if(users_send_to.size())
@@ -194,7 +230,7 @@ namespace IRC_Server
         std::string curChan = users.find(user)->second.current_channel;
         channels.find(curChan)->second.erase(user);
 
-        std::cout << "[SERVER] " << user << " left #" << curChan << " and joined #" << channel_name << std::endl;
+        print_and_log("[SERVER] " + user + " left #" + curChan + " and joined #" + channel_name );
 
         // add user to new channel
         add_user_to_channel(channel_name, user);
@@ -221,14 +257,14 @@ namespace IRC_Server
 
             if(kicker.current_channel != kickee.current_channel)
             {
-                std::cout << "Couldn't kick " << user << ". They aren't in the same channel as the kick initiator" << std::endl;
+                print_and_log("Couldn't kick " + user + ". They aren't in the same channel as the kick initiator" );
                 return;
             }
         }
 
         if(users.find(user) == users.end())
         {
-            std::cout << "Couldn't kick " << user << ". They aren't connected" << std::endl;
+            print_and_log("Couldn't kick " + user + ". They aren't connected" );
             return;
         }
 
@@ -266,9 +302,21 @@ namespace IRC_Server
         // user already exists. We will return and not add this user
         if(users.find(nick) != users.end())
         {
-            std::cout << "[SERVER] " << user.to_string() << " tried to connect. That nickname was already in use." << std::endl;
+            print_and_log("[SERVER] " + user.to_string() + " tried to connect. That nickname was already in use." );
 
             std::string to_user = "[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.";
+            thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
+            sendThread.join();
+
+            return nick;
+        }
+
+        // don't add if username is banned!!
+        if((banned_users.find(nick) != banned_users.end()) || (banned_users.find(user.ip_address) != banned_users.end()))
+        {
+            print_and_log("[SERVER] " + user.to_string() + " tried to connect. That nickname/IP has been banned!" );
+
+            std::string to_user = "[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!";
             thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
             sendThread.join();
 
@@ -281,7 +329,7 @@ namespace IRC_Server
 
         add_user_to_channel("general", nick);
 
-        std::string to_user = "[SERVER] Welcome to the server! You've been added to the #general channel.";
+        std::string to_user = "[SERVER] " + server_banner + " You've been added to the #general channel.";
         thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), to_user, true);
         sendThread.join();
 
@@ -296,7 +344,7 @@ namespace IRC_Server
 
     void quit_command(bool& cont, std::string nickname, std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
     {
-        std::cout << "\tRecieved the 'QUIT' command from the client. Closing this client's connection..." << std::endl;
+        print_and_log("\tRecieved the 'QUIT' command from the client. Closing this client's connection..." );
         cont = false;
         std::string s = "You are being disconnected per your request\n";
         thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
@@ -307,12 +355,12 @@ namespace IRC_Server
 
         kill_user(nickname);
 
-        std::cout << "\tSuccessfully closed the client\n";
+        print_and_log("\tSuccessfully closed the client\n");
     }
 
     void server_shutdown_command(bool& ready, bool& cont, bool& still_running, std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket)
     {
-        std::cout << "\tDetected another server. Shutting down to avoid cyclic behavior..." << std::endl;
+        print_and_log("\tDetected another server. Shutting down to avoid cyclic behavior..." );
         thread childTExit(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), "GOODBYE EVERYONE\n", false);
         ready = false;
         cont = false;
@@ -328,7 +376,7 @@ namespace IRC_Server
         sendThread.join();
 
         std::string cur_channel = users.find(nick)->second.current_channel;
-        std::cout <<"[SERVER] " << nick << " on #" << cur_channel << " - " << message << std::endl;
+        print_and_log("[SERVER] " + nick + " on #" + cur_channel + " - " + message );
 
         std::string to_send = nick + " on #" + cur_channel + ": " + message + "\n";
         send_to_channel(nick, to_send, cur_channel);
@@ -365,7 +413,7 @@ namespace IRC_Server
         {
             std::string cur_channel = tokens[1].substr(1);
 
-            std::cout << "[SERVER] Relaying private message from " << sending_user << " to #" << cur_channel << std::endl;
+            print_and_log("[SERVER] Relaying private message from " + sending_user + " to #" + cur_channel );
             send_to_channel(sending_user, to_send, cur_channel);
         }
         else
@@ -374,11 +422,11 @@ namespace IRC_Server
 
             if(socketLookup.find(tokens[1]) == socketLookup.end())
             {
-                std::cout << "[SERVER] Couldn't find that user to send message to" << std::endl;
+                print_and_log("[SERVER] Couldn't find that user to send message to" );
                 return;
             }
 
-            std::cout << "[SERVER] Relaying private message from " << sending_user << " to " << tokens[1] << std::endl;
+            print_and_log("[SERVER] Relaying private message from " + sending_user + " to " + tokens[1] );
 
             int socketFD = socketLookup.find(tokens[1])->second;
             // send to next user in the channel
@@ -619,12 +667,12 @@ namespace IRC_Server
             t.get()->join();
         }
 
-        std::cout << "[SERVER] Server shutting down, all clients disconnected" << std::endl;
+        print_and_log("[SERVER] Server shutting down, all clients disconnected" );
     }
 
     void server_users_command()
     {
-        std::cout << "[SERVER] All users currently connected: " << std::endl;
+        std::cout << "[SERVER] All users currently connected: "  << std::endl;
 
         std::lock_guard<std::mutex> guard(users_mutex);
         for(auto it = users.begin(); it != users.end(); ++it)
@@ -700,8 +748,7 @@ namespace IRC_Server
 
     void shutdown_server()
     {
-        std::cout << "[SERVER_COMANDLET] Shutting down the server." <<
-                  " Current client connections will be closed." << std::endl;
+        print_and_log("[SERVER_COMANDLET] Shutting down the server. Current client connections will be closed." );
 
         // notify all clients that the server is shutting down
         std::lock_guard<std::mutex> guard(channels_mutex);
@@ -714,7 +761,7 @@ namespace IRC_Server
         }
     }
 
-    void load_config_file(std::string config_path, int& port, std::string& db_path, std::string& log_path, bool& debug_enabled, bool& should_log)
+    void load_config_file(std::string config_path, int& port, std::string& db_path, bool& debug_enabled)
     {
         std::ifstream in(config_path);
 
@@ -774,6 +821,42 @@ namespace IRC_Server
             }
         }
     }
+
+    void load_banner(std::string db_path)
+    {
+        std::ifstream in(db_path + "banner.txt");
+
+        if(!in) {
+            std::cout << "Couldn't read banner file. Using default" << std::endl;
+            return;
+        }
+
+        // just read the first line
+        std::string str;
+        std::getline(in, str);
+        server_banner = str;
+
+        std::cout << "Loaded banner from " << db_path << "banner.txt" << std::endl;
+    }
+
+    void load_banned_users(std::string db_path)
+    {
+        std::ifstream in(db_path + "banusers.txt");
+
+        if(!in) {
+            std::cout << "Couldn't open banned users list. All users will be allowed!" << std::endl;
+            return;
+        }
+
+        std::cout << "Banning users found in " << db_path << "banusers.txt" << std::endl;
+
+        std::string str;
+        while (std::getline(in, str)) {
+            std::vector<std::string> tokens;
+            Utils::tokenize_line(str, tokens);
+            banned_users.insert(std::pair<std::string, int>(tokens[0], 0));
+        }
+    }
 }
 
 
@@ -782,11 +865,10 @@ int main(int argc, char **argv)
     int port = IRC_Server::DEFAULT_SERVER_PORT;
     std::string log_path = IRC_Server::DEFAULT_LOGPATH;
     bool debug_enabled = DEBUG;
-    bool should_log = true;
     std::string db_path = IRC_Server::DEFAULT_DB_PATH;
 
     if(argc == 1)
-        std::cout << "[SERVER] Running with default options" << std::endl;
+        IRC_Server::print_and_log("[SERVER] Running with default options" );
 
     std::string config_file = IRC_Server::DEFAULT_CONFPATH;
     int opt;
@@ -800,7 +882,7 @@ int main(int argc, char **argv)
         }
     }
 
-    IRC_Server::load_config_file(config_file, port, db_path, log_path, debug_enabled, should_log);
+    IRC_Server::load_config_file(config_file, port, db_path, debug_enabled);
 
     optind = 1;
     while ((opt = getopt(argc, argv, "p:c:L:")) != -1)
@@ -815,6 +897,8 @@ int main(int argc, char **argv)
             case 'H':
                 std::cout << IRC_Server::usage() << std::endl;
                 exit(0);
+            case 'c':
+                break;
             default:
                 std::cerr << IRC_Server::err_bad_arg(opt) << std::endl;
                 std::cout << IRC_Server::usage() << std::endl;
@@ -822,12 +906,16 @@ int main(int argc, char **argv)
         }
     }
 
-
     IRC_Server::serverInfo.start_time = IRC_Server::get_current_time() + " on " + IRC_Server::get_current_day() ;
     IRC_Server::serverInfo.patch_level = "2.2";
     IRC_Server::serverInfo.version = "1.0";
 
-    std::cout << "Starting the server...\n" << std::endl;
+    // try loading a banner
+    IRC_Server::load_banner(db_path);
+    // load list of banned users
+    IRC_Server::load_banned_users(db_path);
+
+    IRC_Server::print_and_log("Starting the server...\n" );
     IRC_Server::TCP_Server_Socket socket1(port);
 
     if(socket1.init() != 0)
@@ -836,13 +924,13 @@ int main(int argc, char **argv)
         exit(1);
     }
 
-    std::cout << "[SERVER] Socket initialized, binding..." << std::endl;
+    IRC_Server::print_and_log("[SERVER] Socket initialized, binding..." );
     socket1.bind_socket();
 
-    std::cout << "[SERVER] Socket bound. Preparing to listen..." << std::endl;
+    IRC_Server::print_and_log("[SERVER] Socket bound. Preparing to listen..." );
     socket1.listen_socket();
 
-    std::cout << "[SERVER] Waiting for clients to connect..." << std::endl;
+    IRC_Server::print_and_log("[SERVER] Waiting for clients to connect..." );
 
     // we want to process clients, and accept commands concurrently
     std::thread clientListener(IRC_Server::process_and_wait, &socket1);
@@ -856,5 +944,5 @@ int main(int argc, char **argv)
     // We probably won't get here if exit is typed, since we forcefully shutdown threads
     clientListener.join();
 
-    std::cout << "[SERVER] Shutting down server" << std::endl;
+    IRC_Server::print_and_log("[SERVER] Shutting down server" );
 }

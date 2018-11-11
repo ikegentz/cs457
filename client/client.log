@@ -146,3 +146,43 @@ tom on #general: I love trucking, welding, and lifting!
 hi
 QUIT
 [CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hi
+poopboy on #general: hi
+
+QUIT
+[CLIENT] Terminated session!
+QUIT
+[CLIENT] Terminated session!
