@@ -8,6 +8,8 @@
 #include <algorithm>
 #include <mutex>
 #include <unordered_map>
+#include <iostream>
+#include <fstream>
 #include <map>
 #include <set>
 #include <time.h>
@@ -24,8 +26,9 @@ namespace IRC_Server
 {
     static ServerInfo serverInfo;
     const static unsigned DEFAULT_SERVER_PORT = 1997;
-    const static std::string DEFAULT_CONFPATH = "/conf";
-    const static std::string DEFAULT_LOGPATH = "/logs";
+    const static std::string DEFAULT_CONFPATH = "server.conf";
+    const static std::string DEFAULT_LOGPATH = "server.log";
+    const static std::string DEFAULT_DB_PATH = "db/";
 
     static std::vector<std::unique_ptr<thread>> threadList;
 
@@ -191,7 +194,7 @@ namespace IRC_Server
         std::string curChan = users.find(user)->second.current_channel;
         channels.find(curChan)->second.erase(user);
 
-        std::cout "[SERVER] " << user << " left #" << curChan << " and joined #" << channel_name << std::endl;
+        std::cout << "[SERVER] " << user << " left #" << curChan << " and joined #" << channel_name << std::endl;
 
         // add user to new channel
         add_user_to_channel(channel_name, user);
@@ -710,26 +713,104 @@ namespace IRC_Server
             send_to_channel("BAD-USERNAME", disconnectMessage, it->first);
         }
     }
+
+    void load_config_file(std::string config_path, int& port, std::string& db_path, std::string& log_path, bool& debug_enabled, bool& should_log)
+    {
+        std::ifstream in(config_path);
+
+        if(!in) {
+            std::cout << "Couldn't open config file. Running with defaults and command line args" << std::endl;
+            return;
+        }
+
+        std::cout << "Loaded options from " << config_path << std::endl;
+
+        std::string str;
+        while (std::getline(in, str)) {
+            // skip comments
+            if((str.find("#") != std::string::npos) || (str.size() <= 1))
+                continue;
+
+            std::vector<std::string> tokens;
+            Utils::tokenize_line(str, tokens);
+
+            if(tokens.size() != 2)
+                continue;
+
+            if(tokens[0].find("port") != std::string::npos)
+            {
+                port = stoi(tokens[1]);
+                std::cout << "Port from config file: " << tokens[1] << std::endl;
+            }
+            else if(tokens[0].find("default_debug_mode") != std::string::npos)
+            {
+                std::transform(tokens[1].begin(), tokens[1].end(), tokens[1].begin(), ::tolower);
+
+                if(tokens[1].find("true") != std::string::npos)
+                    debug_enabled = true;
+                else debug_enabled = false;
+
+                std::cout << "Default debug mode from config file: " << debug_enabled << std::endl;
+            }
+            else if(tokens[0].find("default_log_file") != std::string::npos)
+            {
+                log_path = tokens[1];
+                std::cout << "Log path specified in config file: " << log_path << std::endl;
+            }
+            else if(tokens[0].compare("log") == 0)
+            {
+                std::transform(tokens[1].begin(), tokens[1].end(), tokens[1].begin(), ::tolower);
+
+                if(tokens[1].find("true") != std::string::npos)
+                    should_log = true;
+                else should_log = false;
+
+                std::cout << "Will log this sesssion? (specified in config file): " << should_log << std::endl;
+            }
+            else if(tokens[0].compare("dbpath") == 0)
+            {
+                db_path = tokens[1];
+                std::cout << "Grabbing further config info from " << db_path << "*" << std::endl;
+            }
+        }
+    }
 }
 
 
 int main(int argc, char **argv)
 {
-    if(argc == 1)
-        std::cout << "Running with default options" << std::endl;
+    int port = IRC_Server::DEFAULT_SERVER_PORT;
+    std::string log_path = IRC_Server::DEFAULT_LOGPATH;
+    bool debug_enabled = DEBUG;
+    bool should_log = true;
+    std::string db_path = IRC_Server::DEFAULT_DB_PATH;
 
+    if(argc == 1)
+        std::cout << "[SERVER] Running with default options" << std::endl;
+
+    std::string config_file = IRC_Server::DEFAULT_CONFPATH;
     int opt;
+    while ((opt = getopt(argc, argv, "p:c:L:")) != -1)
+    {
+        switch(opt)
+        {
+            case 'c':
+                config_file = optarg;
+                break;
+        }
+    }
+
+    IRC_Server::load_config_file(config_file, port, db_path, log_path, debug_enabled, should_log);
+
+    optind = 1;
     while ((opt = getopt(argc, argv, "p:c:L:")) != -1)
     {
         switch(opt) {
             case 'p':
-                std::cout << "Port argument" << std::endl;
-                break;
-            case 'c':
-                std::cout << "Config argument" << std::endl;
+                port = std::stoi(optarg);
                 break;
             case 'L':
-                std::cout << "Log argument" << std::endl;
+                log_path = optarg;
                 break;
             case 'H':
                 std::cout << IRC_Server::usage() << std::endl;
@@ -747,7 +828,7 @@ int main(int argc, char **argv)
     IRC_Server::serverInfo.version = "1.0";
 
     std::cout << "Starting the server...\n" << std::endl;
-    IRC_Server::TCP_Server_Socket socket1(IRC_Server::DEFAULT_SERVER_PORT);
+    IRC_Server::TCP_Server_Socket socket1(port);
 
     if(socket1.init() != 0)
     {
