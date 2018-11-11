@@ -28,6 +28,8 @@ namespace IRC_Client
     std::mutex message_queue_mutex;
 
     static bool communicator_running = true;
+    static bool should_log = true;
+    static std::string log_path = DEFAULT_LOGPATH;
 
     std::string usage()
     {
@@ -68,6 +70,35 @@ namespace IRC_Client
         return ret;
     }
 
+    void print_and_log(std::string output)
+    {
+        if(should_log)
+        {
+            std::fstream fs;
+            fs.open (log_path, std::fstream::out | std::fstream::app);
+
+            // append to log file
+            fs << output << std::endl;
+            fs.close();
+        }
+
+        // do the actual print to terminal
+        std::cout << output << std::endl;
+    }
+
+    void log_only(std::string output)
+    {
+        if(should_log)
+        {
+            std::fstream fs;
+            fs.open (log_path, std::fstream::out | std::fstream::app);
+
+            // append to log file
+            fs << output << std::endl;
+            fs.close();
+        }
+    }
+
     // we only want to use the mutex lock for the pop(), so put it in a function so it goes out of scope
     std::string next_message()
     {
@@ -91,7 +122,7 @@ namespace IRC_Client
 
             // print response from server, as long as it isn't just an empty acknowledgement
             if(v > 0 && msg != "\n")
-                std::cout << msg;
+                print_and_log(msg);
 
 
 
@@ -124,10 +155,11 @@ namespace IRC_Client
             {
                 std::lock_guard <std::mutex> guard(IRC_Client::message_queue_mutex);
                 message_queue.push(outgoing_msg);
+                log_only(outgoing_msg);
             }
 
 #if DEBUG == true
-            std::cout << outgoing_msg << std::endl;
+            print_and_log(outgoing_msg );
 #endif
         } while (RUNNING);
         communicator_running = false;
@@ -144,7 +176,7 @@ namespace IRC_Client
         std::string initial_connection = "USER " + nickname + " " + hostname + " IKE_SERVER " + " :" + username;
         return initial_connection;
     }
-    int load_config_file(std::string config_filepath, std::string& serverIP, int& port, std::string& nickname, std::string& log_filepath, bool& debug_enabled, bool& should_log)
+    int load_config_file(std::string config_filepath, std::string& serverIP, int& port, std::string& nickname, bool& debug_enabled)
     {
         std::ifstream in(config_filepath);
 
@@ -189,8 +221,8 @@ namespace IRC_Client
             }
             else if(tokens[0].find("default_log_file") != std::string::npos)
             {
-                log_filepath = tokens[1];
-                std::cout << "[CLIENT] Log path specified in config file: " << log_filepath << std::endl;
+                log_path = tokens[1];
+                std::cout << "[CLIENT] Log path specified in config file: " << log_path << std::endl;
             }
             else if(tokens[0].compare("log") == 0)
             {
@@ -223,10 +255,25 @@ int main(int argc, char **argv)
     std::string nickname = IRC_Client::DEFAULT_USERNAME;
     std::string config_filepath = IRC_Client::DEFAULT_CONFIG_PATH;
     std::string test_filepath = IRC_Client::DEFAULT_TEST_PATH;
-    std::string log_filepath = IRC_Client::DEFAULT_LOGPATH;
     bool debug_enabled = DEBUG;
-    bool should_log = true;
 
+    // check only for config file first, so other options can override it
+    while ((opt = getopt(argc, argv, "h:u:p:c:t:L:")) != -1)
+    {
+        switch (opt)
+        {
+            case 'c':
+                selected_opt = 'c';
+                config_filepath = optarg;
+                break;
+        }
+    }
+
+    // load options from config file (if found)
+    IRC_Client::load_config_file(config_filepath, serverIP, port, nickname, debug_enabled);
+
+    // reset for the main parse
+    optind = 1;
     while ((opt = getopt(argc, argv, "h:u:p:c:t:L:")) != -1)
     {
         switch(opt) {
@@ -252,7 +299,7 @@ int main(int argc, char **argv)
                 break;
             case 'L':
                 selected_opt = 'L';
-                log_filepath = optarg;
+                IRC_Client::log_path = optarg;
                 break;
             case 'H':
                 selected_opt = 'H';
@@ -265,20 +312,18 @@ int main(int argc, char **argv)
         }
     }
 
-    IRC_Client::load_config_file(config_filepath, serverIP, port, nickname, log_filepath, debug_enabled, should_log);
-
     std::cout << std::endl;
 
-    std::cout << "[CLIENT] Starting the client..." << std::endl;
+    IRC_Client::print_and_log("[CLIENT] Starting the client..." );
 
-    std::cout << "[CLIENT] Connecting to server " << serverIP << " on port " << port << std::endl;
+    IRC_Client::print_and_log("[CLIENT] Connecting to server " + serverIP + " on port " + std::to_string(port) );
 
     IRC_Client::TCPClientSocket clientSocket(serverIP,port);
 
     int val = clientSocket.connectSocket();
     if(val == -1)
     {
-        std::cerr << "[CLIENT] Couldn't connect to the server. Check hostname/IP and port" << std::endl;
+        IRC_Client::print_and_log("[CLIENT] Couldn't connect to the server. Check hostname/IP and port" );
         exit(1);
     }
 
@@ -292,12 +337,12 @@ int main(int argc, char **argv)
     // username already taken
     if(msg.find("IN_USE") != std::string::npos)
     {
-        std::cout << msg << std::endl;
+        IRC_Client::print_and_log(msg );
         clientSocket.closeSocket();
         exit(0);
     }
 
-    std::cout << msg << std::endl;
+    IRC_Client::print_and_log(msg );
 
     // main loops. receive typed input
     std::thread commandListener(IRC_Client::process_client_commands);
@@ -308,6 +353,8 @@ int main(int argc, char **argv)
     communicatorThread.join();
 
     clientSocket.closeSocket();
+
+    IRC_Client::print_and_log("[CLIENT] Terminated session!");
 
     return 0;
 

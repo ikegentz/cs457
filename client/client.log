@@ -1,0 +1,40 @@
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+jio
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+hi
+ike on #general: hi
+
+yo
+poopboy on #general: yo
+
+JOIN new
+[SERVER] You left #general and joined #new
+
+poopboy left #general
+
+hi
