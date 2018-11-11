@@ -11,11 +11,14 @@
 #include <mutex>
 #include <unordered_map>
 #include <queue>
+#include <iostream>
+#include <fstream>
 #include <limits.h>
 
 #include "tcp_client_socket.h"
 #include "client_command_processor.h"
 #include "client_globals.h"
+#include "../utils/string_ops.h"
 
 #define DEBUG false
 
@@ -141,14 +144,77 @@ namespace IRC_Client
         std::string initial_connection = "USER " + nickname + " " + hostname + " IKE_SERVER " + " :" + username;
         return initial_connection;
     }
-}
+    int load_config_file(std::string config_filepath, std::string& serverIP, int& port, std::string& nickname, std::string& log_filepath, bool& debug_enabled, bool& should_log)
+    {
+        std::ifstream in(config_filepath);
 
+        if(!in) {
+            std::cout << "[CLIENT] Couldn't open config file. Running with defaults and command line args" << std::endl;
+            return 1;
+        }
+
+        std::cout << "[CLIENT] Loaded options from " << config_filepath << std::endl;
+
+        std::string str;
+        while (std::getline(in, str)) {
+            // skip comments
+            if((str.find("#") != std::string::npos) || (str.size() <= 1))
+                continue;
+
+            std::vector<std::string> tokens;
+            Utils::tokenize_line(str, tokens);
+
+            if(tokens.size() != 2)
+                continue;
+
+            if(tokens[0].find("last_server_used") != std::string::npos)
+            {
+                serverIP = tokens[1];
+                std::cout << "[CLIENT] Server IP from config file: " << serverIP << std::endl;
+            }
+            else if(tokens[0].find("port") != std::string::npos)
+            {
+                port = stoi(tokens[1]);
+                std::cout << "[CLIENT] Port from config file: " << tokens[1] << std::endl;
+            }
+            else if(tokens[0].find("default_debug_mode") != std::string::npos)
+            {
+                std::transform(tokens[1].begin(), tokens[1].end(), tokens[1].begin(), ::tolower);
+
+                if(tokens[1].find("true") != std::string::npos)
+                    debug_enabled = true;
+                else debug_enabled = false;
+
+                std::cout << "[CLIENT] Default debug mode from config file: " << debug_enabled << std::endl;
+            }
+            else if(tokens[0].find("default_log_file") != std::string::npos)
+            {
+                log_filepath = tokens[1];
+                std::cout << "[CLIENT] Log path specified in config file: " << log_filepath << std::endl;
+            }
+            else if(tokens[0].compare("log") == 0)
+            {
+                std::transform(tokens[1].begin(), tokens[1].end(), tokens[1].begin(), ::tolower);
+
+                if(tokens[1].find("true") != std::string::npos)
+                    should_log = true;
+                else should_log = false;
+
+                std::cout << "[CLIENT] Will log this sesssion? (specified in config file): " << should_log << std::endl;
+            }
+            else if(tokens[0].find("nickname") != std::string::npos)
+            {
+                nickname = tokens[1];
+                std::cout << "[CLIENT] Nickname specified in config file: " << nickname << std::endl;
+            }
+        }
+
+        return 0;
+    }
+}
 
 int main(int argc, char **argv)
 {
-    if(argc == 1)
-        std::cout << "Running with default options" << std::endl;
-
     int opt;
     char selected_opt = '.';
 
@@ -158,6 +224,8 @@ int main(int argc, char **argv)
     std::string config_filepath = IRC_Client::DEFAULT_CONFIG_PATH;
     std::string test_filepath = IRC_Client::DEFAULT_TEST_PATH;
     std::string log_filepath = IRC_Client::DEFAULT_LOGPATH;
+    bool debug_enabled = DEBUG;
+    bool should_log = true;
 
     while ((opt = getopt(argc, argv, "h:u:p:c:t:L:")) != -1)
     {
@@ -196,6 +264,9 @@ int main(int argc, char **argv)
                 exit(1);
         }
     }
+
+    IRC_Client::load_config_file(config_filepath, serverIP, port, nickname, log_filepath, debug_enabled, should_log);
+
     std::cout << std::endl;
 
     std::cout << "[CLIENT] Starting the client..." << std::endl;
