@@ -12,7 +12,7 @@ namespace IRC_Client
     const unsigned DEFAULT_SERVER_PORT = 1997;
     const std::string DEFAULT_LOGPATH = "client.log";
     const std::string DEFAULT_CONFIG_PATH = "client.conf";
-    const std::string DEFAULT_TEST_PATH = "test.txt";
+    const std::string NO_TEST = "NO_TEST";
 }
 
 #endif //CS457_CLIENT_GLOBALS_H

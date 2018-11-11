@@ -12,7 +12,6 @@
 #include <set>
 #include <time.h>
 
-
 #include "tcp_server_socket.h"
 #include "tcp_user_socket.h"
 #include "user.h"
@@ -601,9 +600,6 @@ namespace IRC_Server
                 if(!still_running)
                     goto quitThreads;
             } while(val == -1);
-
-            // TODO this is something that seems more like a log message than std::out
-            std::cout << "[SERVER] Making new thread to handle this connection with ID: " << threadID << std::endl << std::endl;
 
             std::lock_guard<std::mutex> guard(clientSockets_mutex);
             clientSockets[threadID] = clientSocket;

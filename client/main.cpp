@@ -13,6 +13,7 @@
 #include <queue>
 #include <iostream>
 #include <fstream>
+#include <chrono>         // std::chrono::seconds
 #include <limits.h>
 
 #include "tcp_client_socket.h"
@@ -243,6 +244,42 @@ namespace IRC_Client
 
         return 0;
     }
+
+    void run_test_file(std::string test_filepath)
+    {
+        std::ifstream in(test_filepath);
+
+        if(!in) {
+            std::cout << "[CLIENT] Couldn't open test file" << std::endl;
+            return;
+        }
+
+        std::cout << "[CLIENT] Running test file " << test_filepath << std::endl;
+
+        bool RUNNING = true;
+        std::string str;
+        do
+        {
+            while (std::getline(in, str))
+            {
+                std::string outgoing_msg;
+                bool should_send;
+                tie(outgoing_msg, should_send) = IRC_Client::build_outgoing_message(str, RUNNING);
+
+                // push a message onto the queue to be sent by the socket thread
+                if (should_send)
+                {
+                    std::lock_guard <std::mutex> guard(IRC_Client::message_queue_mutex);
+                    message_queue.push(outgoing_msg);
+                    print_and_log(outgoing_msg);
+                }
+
+                // sleep for a while since we want to simulate an actual user running commands
+                std::this_thread::sleep_for(std::chrono::seconds(4));
+            }
+        }while(RUNNING);
+        communicator_running = false;
+    }
 }
 
 int main(int argc, char **argv)
@@ -254,7 +291,7 @@ int main(int argc, char **argv)
     int port = IRC_Client::DEFAULT_SERVER_PORT;
     std::string nickname = IRC_Client::DEFAULT_USERNAME;
     std::string config_filepath = IRC_Client::DEFAULT_CONFIG_PATH;
-    std::string test_filepath = IRC_Client::DEFAULT_TEST_PATH;
+    std::string test_filepath = IRC_Client::NO_TEST;
     bool debug_enabled = DEBUG;
 
     // check only for config file first, so other options can override it
@@ -344,12 +381,23 @@ int main(int argc, char **argv)
 
     IRC_Client::print_and_log(msg );
 
-    // main loops. receive typed input
-    std::thread commandListener(IRC_Client::process_client_commands);
     // communicate with the server
     std::thread communicatorThread(IRC_Client::communicate_with_server, &clientSocket);
 
-    commandListener.join();
+    // listen for terminal input input
+    if(test_filepath.compare(IRC_Client::NO_TEST) == 0)
+    {
+        std::thread commandListener(IRC_Client::process_client_commands);
+        commandListener.join();
+    }
+    // run the test file automatically
+    else
+    {
+        std::thread testingThread(IRC_Client::run_test_file, test_filepath);
+        testingThread.join();
+    }
+
+   // need to join() for server communications AFTER we launch either testingThread or commandListener
     communicatorThread.join();
 
     clientSocket.closeSocket();

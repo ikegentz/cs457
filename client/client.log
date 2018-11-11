@@ -38,3 +38,105 @@ JOIN new
 poopboy left #general
 
 hi
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[SERVER] You have been killed!
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+hi
+hello there
+PING
+[SERVER] PONG
+
+yo
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+hi
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+bob on #general: What are your hobbies?
+
+USERS
+[SERVER] bob@127.0.0.1[ike-laptop-mint]:51136 - ike@127.0.0.1[ike-laptop-mint]:51140 - 
+
+bob on #general: Oh, I love trucks too! Let's make a new channel to discuss this!
+
+bob left #general
+
+jo
+JOIN truck_talk
+[SERVER] You left #general and joined #truck_talk
+
+bob on #truck_talk: Oh really??
+
+hi fellas
+bob on #truck_talk: I love the Kenworth W900!
+
+bob on #truck_talk: Did you hear KW is making a new truck, the W990?
+
+bob on #truck_talk: Yeah, it looks cool but can't beat the classic look!
+
+bob on #truck_talk: Favorite truck engine?
+
+bob on #truck_talk: Sweet! I love CAT engines!
+
+bob on #truck_talk: Want to grab a beer sometime?
+
+KICK bob
+bob left #truck_talk
+
+JOIN general
+[SERVER] You left #truck_talk and joined #general
+
+bob on #general: Howdy stranger, what's your name?
+
+tom on #general: Hi, I'm Tom!
+
+bob on #general: Nice to meet you! My name's Bob!
+
+tom on #general: Nice to meet you!
+
+tom on #general: Yep! 
+
+bob on #general: Are you taking CS457?
+
+bob on #general: Cool, me too!
+
+tom on #general: I do, it's a fun class.
+
+bob on #general: Do you like it?
+
+tom on #general: He sure is.
+
+bob on #general: Yeah, it's a great class! Professor Ortega's the man!
+
+tom on #general: Mine's blue!!
+
+bob on #general: What's your favorite color?
+
+tom on #general: I love trucking, welding, and lifting!
+
