@@ -10,11 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ec64dd51-a756-4345-9136-36de6f5ef36a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/client.log" beforeDir="false" afterPath="$PROJECT_DIR$/client/client.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/db/banusers.txt" beforeDir="false" afterPath="$PROJECT_DIR$/server/db/banusers.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.conf" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -53,14 +49,14 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="681" />
-          <entry key="cpp" value="41711" />
+          <entry key="cpp" value="41712" />
           <entry key="gitignore" value="6" />
           <entry key="h" value="2991" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="ObjectiveC" value="44702" />
+          <entry key="ObjectiveC" value="44703" />
           <entry key="PLAIN_TEXT" value="687" />
         </counts>
       </usages-collector>
@@ -104,8 +100,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/server/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="659">
-              <caret line="870" column="20" selection-start-line="870" selection-start-column="20" selection-end-line="870" selection-end-column="20" />
+            <state relative-caret-position="285">
+              <caret line="31" column="73" lean-forward="true" selection-start-line="31" selection-start-column="73" selection-end-line="31" selection-end-column="73" />
               <folding>
                 <element signature="e#1226#1984#0" />
                 <element signature="e#1990#2133#0" />
@@ -379,12 +375,12 @@
       <workItem from="1541641691500" duration="12073000" />
       <workItem from="1541722668684" duration="18122000" />
       <workItem from="1541786668833" duration="13204000" />
-      <workItem from="1541870334943" duration="18262000" />
+      <workItem from="1541870334943" duration="18370000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="121851000" />
+    <option name="totallyTimeSpent" value="121959000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1920" y="-1" width="1920" height="1080" extended-state="6" />
@@ -572,8 +568,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="659">
-          <caret line="870" column="20" selection-start-line="870" selection-start-column="20" selection-end-line="870" selection-end-column="20" />
+        <state relative-caret-position="285">
+          <caret line="31" column="73" lean-forward="true" selection-start-line="31" selection-start-column="73" selection-end-line="31" selection-end-column="73" />
           <folding>
             <element signature="e#1226#1984#0" />
             <element signature="e#1990#2133#0" />

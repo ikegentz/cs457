@@ -186,3 +186,8 @@ QUIT
 [CLIENT] Terminated session!
 QUIT
 [CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[SERVER] You have been killed!
+

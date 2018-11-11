@@ -27,7 +27,7 @@ namespace IRC_Server
     static ServerInfo serverInfo;
     const static unsigned DEFAULT_SERVER_PORT = 1997;
     const static std::string DEFAULT_CONFPATH = "conf/server.conf";
-    const static std::string DEFAULT_LOGPATH = "log/server.log";
+    const static std::string DEFAULT_LOGPATH = "logs/server.log";
     const static std::string DEFAULT_DB_PATH = "db/";
     const static std::string DEFAULT_BANNER = "Welcome to the server!\n";
 
