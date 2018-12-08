@@ -1,0 +1,609 @@
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+jio
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+hi
+ike on #general: hi
+
+yo
+poopboy on #general: yo
+
+JOIN new
+[SERVER] You left #general and joined #new
+
+poopboy left #general
+
+hi
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[SERVER] You have been killed!
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+hi
+hello there
+PING
+[SERVER] PONG
+
+yo
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+hi
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+bob on #general: What are your hobbies?
+
+USERS
+[SERVER] bob@127.0.0.1[ike-laptop-mint]:51136 - ike@127.0.0.1[ike-laptop-mint]:51140 - 
+
+bob on #general: Oh, I love trucks too! Let's make a new channel to discuss this!
+
+bob left #general
+
+jo
+JOIN truck_talk
+[SERVER] You left #general and joined #truck_talk
+
+bob on #truck_talk: Oh really??
+
+hi fellas
+bob on #truck_talk: I love the Kenworth W900!
+
+bob on #truck_talk: Did you hear KW is making a new truck, the W990?
+
+bob on #truck_talk: Yeah, it looks cool but can't beat the classic look!
+
+bob on #truck_talk: Favorite truck engine?
+
+bob on #truck_talk: Sweet! I love CAT engines!
+
+bob on #truck_talk: Want to grab a beer sometime?
+
+KICK bob
+bob left #truck_talk
+
+JOIN general
+[SERVER] You left #truck_talk and joined #general
+
+bob on #general: Howdy stranger, what's your name?
+
+tom on #general: Hi, I'm Tom!
+
+bob on #general: Nice to meet you! My name's Bob!
+
+tom on #general: Nice to meet you!
+
+tom on #general: Yep! 
+
+bob on #general: Are you taking CS457?
+
+bob on #general: Cool, me too!
+
+tom on #general: I do, it's a fun class.
+
+bob on #general: Do you like it?
+
+tom on #general: He sure is.
+
+bob on #general: Yeah, it's a great class! Professor Ortega's the man!
+
+tom on #general: Mine's blue!!
+
+bob on #general: What's your favorite color?
+
+tom on #general: I love trucking, welding, and lifting!
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server! You've been added to the #general channel.
+hi
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hi
+poopboy on #general: hi
+
+QUIT
+[CLIENT] Terminated session!
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[SERVER] You have been killed!
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hello there sucker! im lisa
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+lisa youre going down
+admin on #general: lisa youre going down
+
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hey admins. suck it!
+this is joe btw. i tricked you
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hey joe. you suck. im banning you anyways
+admin on #general: hey joe. you suck. im banning you anyways
+
+USERS
+[SERVER] admin@127.0.0.1[ike-laptop-mint]:51840 - joeschmoe@127.0.0.1[ike-laptop-mint]:51838 - 
+
+USERIP joeschmoe
+[SERVER] joeschmoe - 127.0.0.1
+
+QUIT
+[CLIENT] Terminated session!
+[SERVER] Server has been shutdown. You wont' be able to communicate any longer!
+
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+bob on #general: What's your favorite color?
+
+tom on #general: Mine's blue!!
+
+bob on #general: Cool, mine's red.
+
+tom on #general: Cool!
+
+bob on #general: What are your hobbies?
+
+tom on #general: I love trucking, welding, and lifting!
+
+bob on #general: Oh, I love trucks too! Let's make a new channel to discuss this!
+
+tom on #general: OK!
+
+bob left #general
+
+tom left #general
+
+helop
+LIST
+[SERVER] All channels on the server - #general, #truck_talk, 
+
+JOIN truck_talk
+[SERVER] You left #general and joined #truck_talk
+
+bob on #truck_talk: Favorite truck engine?
+
+tom on #truck_talk: Can't beat a Detroit!
+
+bob on #truck_talk: Sweet! I love CAT engines!
+
+tom on #truck_talk: 4 and a quarter CAT was a beast of an engine!
+
+KICK ike
+You've been kicked from your current channel!
+
+[SERVER] You left #truck_talk and joined #general
+
+tom on #general: See ya later folks!
+
+
+tom on #general: Hi, I'm Tom!
+
+USERS
+[SERVER] ike@127.0.0.1[ike-laptop-mint]:51858 - tom@127.0.0.1[ike-laptop-mint]:51860 - 
+
+tom on #general: Nice to meet you!
+
+KILL tom
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+KILL tom
+You have been killed by ike
+QUIT
+[CLIENT] Terminated session!
+[SERVER] Server has been shutdown. You wont' be able to communicate any longer!
+
+hello????
+PING
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hey admin, i'm joe. you suck
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hey ike2!
+ike1 on #general: hey ike2!
+
+hello ike1
+ike2 on #general: hello ike1
+
+JOIN my_private_channel
+[SERVER] You left #general and joined #my_private_channel
+
+ike1 left #general
+
+ike1?? where r u?
+USERS
+[SERVER] ike1@127.0.0.1[ike-laptop-mint]:51886 - ike2@127.0.0.1[ike-laptop-mint]:51892 - 
+
+LIST
+[SERVER] All channels on the server - #general, #my_private_channel, 
+
+JOIN my_private_channel
+[SERVER] You left #general and joined #my_private_channel
+
+hey ike1
+ike2 on #my_private_channel: hey ike1
+
+KICK ike1
+You've been kicked from your current channel!
+
+[SERVER] You left #my_private_channel and joined #general
+
+ike1 left #my_private_channel
+
+PRIVMSG ike1 sup dude
+
+ike2 on #my_private_channel: sup dude 
+
+ike1
+USERS
+[SERVER] ike1@127.0.0.1[ike-laptop-mint]:51886 - ike2@127.0.0.1[ike-laptop-mint]:51892 - 
+
+KILL ike1
+You have been killed by ike1
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+KILL ike2
+You have been killed by ike1
+hello???
+PING
+QUIT
+[CLIENT] Terminated session!
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, that nickname has already been used. Please try logging in with a different username.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+QUIT
+[CLIENT] Terminated session!
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+tom on #general: See ya later folks!
+
+JOIN truck_talk
+[SERVER] You left #general and joined #truck_talk
+
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hety there pal
+ike2 on #general: hety there pal
+
+hey bud. dont talk to me
+ike on #general: hey bud. dont talk to me
+
+:(
+ike2 on #general: :(
+
+JOIN private
+[SERVER] You left #general and joined #private
+
+ike left #general
+
+hello???
+USERS
+[SERVER] ike@127.0.0.1[ike-laptop-mint]:51914 - ike2@127.0.0.1[ike-laptop-mint]:51916 - 
+
+LIST
+[SERVER] All channels on the server - #general, #private, 
+
+JOIN private
+[SERVER] You left #general and joined #private
+
+hello friend. i'm annoying :d
+ike2 on #private: hello friend. i'm annoying :d
+
+KICK ike1
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+QUIT
+[CLIENT] Terminated session!
+./quit
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+USERS
+[SERVER] adim@127.0.0.1[ike-laptop-mint]:51928 - lisa2@127.0.0.1[ike-laptop-mint]:51926 - 
+
+QUIT
+[CLIENT] Terminated session!
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[SERVER] Server has been shutdown. You wont' be able to communicate any longer!
+
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] ERR<IN_USE> Sorry, you've been banned from the server!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+hey ike
+francisco on #general: hey ike
+
+hey there teach
+ike on #general: hey there teach
+
+LIST
+[SERVER] All channels on the server - #general, 
+
+JOIN private
+[SERVER] You left #general and joined #private
+
+ike left #general
+
+LIST
+[SERVER] All channels on the server - #general, #private, 
+
+JOIN private
+[SERVER] You left #general and joined #private
+
+ike you are going to fail my class >:d
+francisco on #private: ike you are going to fail my class >:d
+
+:c
+ike on #private: :c
+
+JOIN general
+[SERVER] You left #private and joined #general
+
+ike left #private
+
+LIST
+[SERVER] All channels on the server - #general, #private, 
+
+USERS
+[SERVER] francisco@127.0.0.1[ike-laptop-mint]:51942 - ike@127.0.0.1[ike-laptop-mint]:51940 - 
+
+PRIVMSG ike hey fool
+
+francisco on #private: hey fool 
+
+KICK francisco
+JOIN ikechan
+[SERVER] You left #general and joined #ikechan
+
+JOIN ikechan
+[SERVER] You left #private and joined #ikechan
+
+KICK francisco
+You've been kicked from your current channel!
+
+[SERVER] You left #ikechan and joined #general
+
+francisco left #ikechan
+
+KILL ike
+You have been killed by francisco
+hello????
+QUIT
+[CLIENT] Terminated session!
+QUIT
+[CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[SERVER] Welcome to the server. This program was build by Isaac Gentz in Nov, 2018 for CS457! You've been added to the #general channel.
+JOIN truck_talk
+[SERVER] You left #general and joined #truck_talk
+
+tom on #truck_talk: I did, it looks sweet!
+
+bob on #truck_talk: Yeah, it looks cool but can't beat the classic look!
+
+tom on #truck_talk: I agree!
+
+bob on #truck_talk: Favorite truck engine?
+
+tom on #truck_talk: Can't beat a Detroit!
+
+bob on #truck_talk: Sweet! I love CAT engines!
+
+tom on #truck_talk: 4 and a quarter CAT was a beast of an engine!
+
+bob on #truck_talk: Want to grab a beer sometime?
+
+tom on #truck_talk: Hell yeah!
+
+bob on #truck_talk: Sweet, where should we go??
+
+tom on #truck_talk: Let's go to the Cowboy in Laramie!
+
+i wanna grab a beer
+bob on #truck_talk: I love that place! :)
+
+tom on #truck_talk: See ya later Bob!
+
+bob on #truck_talk: Well man it's been nice talking to you! I have to run.
+
+tom left #truck_talk
+
+bob on #truck_talk: Talk to you later! Goodbye!
+
+JOIN general
+[SERVER] You left #truck_talk and joined #general
+
+USERS
+[SERVER] ike@127.0.0.1[ike-laptop-mint]:51948 - 
+
+QUIT
+[CLIENT] Terminated session!
