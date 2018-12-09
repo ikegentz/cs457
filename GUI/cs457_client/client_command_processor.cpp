@@ -2,13 +2,13 @@
 // Created by ikegentz on 11/7/18.
 //
 
-#include "client_command_processor.h"
+#include "mainwindow.h"
 #include "client_globals.h"
 #include "string_ops.h"
 
 
 
-std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string client_input, bool& running)
+std::tuple<std::string, bool> MainWindow::build_outgoing_message(std::string client_input, bool& running)
 {
     std::string response = "";
 
@@ -104,29 +104,38 @@ std::tuple<std::string, bool> IRC_Client::build_outgoing_message(std::string cli
     response = client_input;
     return std::make_tuple(response, true);
 }
-std::string IRC_Client::ping_command()
+std::string MainWindow::ping_command()
 {
     return "PING";
 }
 
-std::string IRC_Client::list_command()
+std::string MainWindow::list_command()
 {
     return "LIST";
 }
 
-std::string IRC_Client::join_command(std::string input)
+std::string MainWindow::join_command(std::string input)
 {
     std::vector<std::string> tokens;
     Utils::tokenize_line(input, tokens);
+    // add new channel queue
+    std::cout << (this->channel_messages.find(tokens[1]) == this->channel_messages.end()) << std::endl;
+    if(this->channel_messages.find(tokens[1]) == this->channel_messages.end())
+    {
+        this->channel_messages[tokens[1]] = std::vector<std::string>();
+        std::cout << (this->channel_messages.find(tokens[1]) == this->channel_messages.end()) << std::endl;
+        std::cout << "MAKING NEW CHANNEL BUFFER: " << tokens[1] << std::endl;
+    }
+
     return "JOIN " + tokens[1];
 }
 
-std::string IRC_Client::quit_command()
+std::string MainWindow::quit_command()
 {
     return "QUIT";
 }
 
-std::string IRC_Client::privmsg_command(std::string input, bool& should_send)
+std::string MainWindow::privmsg_command(std::string input, bool& should_send)
 {
     std::vector<std::string> tokens;
     Utils::tokenize_line(input, tokens);
@@ -148,17 +157,17 @@ std::string IRC_Client::privmsg_command(std::string input, bool& should_send)
     return ret;
 }
 
-std::string IRC_Client::info_command()
+std::string MainWindow::info_command()
 {
     return "INFO";
 }
 
-std::string IRC_Client::time_command()
+std::string MainWindow::time_command()
 {
     return "TIME";
 }
 
-std::string IRC_Client::user_ip_command(std::string input, bool& should_send)
+std::string MainWindow::user_ip_command(std::string input, bool& should_send)
 {
     std::vector<std::string> tokens;
     Utils::tokenize_line(input, tokens);
@@ -175,7 +184,7 @@ std::string IRC_Client::user_ip_command(std::string input, bool& should_send)
     return "USERIP " + tokens[1];
 }
 
-std::string IRC_Client::user_host_command(std::string input, bool& should_send)
+std::string MainWindow::user_host_command(std::string input, bool& should_send)
 {
     std::vector<std::string> tokens;
     Utils::tokenize_line(input, tokens);
@@ -192,17 +201,17 @@ std::string IRC_Client::user_host_command(std::string input, bool& should_send)
     return "USERHOST " + tokens[1];
 }
 
-std::string IRC_Client::version_command()
+std::string MainWindow::version_command()
 {
     return "VERSION";
 }
 
-std::string IRC_Client::users_command()
+std::string MainWindow::users_command()
 {
     return "USERS";
 }
 
-std::string IRC_Client::kill_command(std::string input, bool& should_send)
+std::string MainWindow::kill_command(std::string input, bool& should_send)
 {
     std::vector<std::string> tokens;
     Utils::tokenize_line(input, tokens);
@@ -219,7 +228,7 @@ std::string IRC_Client::kill_command(std::string input, bool& should_send)
     return "KILL " + tokens[1];
 }
 
-std::string IRC_Client::kick_command(std::string input, bool& should_send)
+std::string MainWindow::kick_command(std::string input, bool& should_send)
 {
     std::vector<std::string> tokens;
     Utils::tokenize_line(input, tokens);
@@ -236,7 +245,7 @@ std::string IRC_Client::kick_command(std::string input, bool& should_send)
     return "KICK " + tokens[1];
 }
 
-std::string IRC_Client::help_command()
+std::string MainWindow::help_command()
 {
     std::string ret = "\nSupported Commands: \n";
     ret += "\tPRIVMSG\n";

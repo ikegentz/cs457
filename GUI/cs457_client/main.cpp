@@ -2,7 +2,6 @@
 #include "tcp_client_socket.h"
 #include "client_globals.h"
 #include "string_ops.h"
-#include "client_command_processor.h"
 
 #include <QApplication>
 #include <unistd.h>

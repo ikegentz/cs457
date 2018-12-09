@@ -1,9 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "client_command_processor.h"
 
 #include<iostream>
 #include <string>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->should_log = false;
     this->communicator_running = true;
     log_path = IRC_Client::DEFAULT_LOGPATH;
+    this->channel_messages["general"] = std::vector<std::string>();
 }
 
 MainWindow::~MainWindow()
@@ -28,7 +29,7 @@ void MainWindow::on_inputBox_returnPressed()
 
     std::string outgoing_msg;
     bool should_send;
-    tie(outgoing_msg, should_send) = IRC_Client::build_outgoing_message(input, this->RUNNING);
+    tie(outgoing_msg, should_send) = this->build_outgoing_message(input, this->RUNNING);
 
     // push a message onto the queue to be sent by the socket thread
     if(should_send)
@@ -148,6 +149,24 @@ std::string MainWindow::next_message()
     return message;
 }
 
+std::string MainWindow::extract_channel_from_message(std::string msg)
+{
+    std::string start = "[CHANNEL]";
+    std::string end = "[/CHANNEL]";
+
+    int startPos = msg.find(start) + start.size();
+    int endPos = msg.find(end);
+
+    return msg.substr(startPos, endPos - (end.size()-1));
+}
+
+std::string MainWindow::extract_message_contents(std::string msg)
+{
+    std::string end = "[/CHANNEL]";
+
+    return msg.substr(msg.find(end) + end.size());
+}
+
 void MainWindow::communicate_with_server(IRC_Client::TCPClientSocket* clientSocket)
 {
     // process any messages that haven't been sent yet
@@ -161,9 +180,27 @@ void MainWindow::communicate_with_server(IRC_Client::TCPClientSocket* clientSock
 
         // print response from server, as long as it isn't just an empty acknowledgement
         if(v > 0 && msg != "\n")
+        {
             print_and_log(msg);
 
+            // add server command to display, regardless of current channel
+            // this '!' is decieving, but remember that this returns an index, and any non-zero is true
+            if(!msg.find("[SERVER]"))
+                std::cout << "TODO -- Display server message regardless of channel" << std::endl;
 
+
+            std::string channel_name = this->extract_channel_from_message(msg);
+            if(this->channel_messages.find(channel_name) == this->channel_messages.end())
+                log_only("Not subscribed to channel" + channel_name + ". Skipping message");
+
+            // add the message to our queue of messages
+            if(this->channel_messages.find(channel_name) != this->channel_messages.end())
+            {
+                std::vector<std::string> cur_messages = this->channel_messages.find(channel_name)->second;
+                cur_messages.push_back(this->extract_message_contents(msg));
+                this->channel_messages[channel_name] = cur_messages;
+            }
+        }
 
         if(!this->message_queue.empty())
         {
@@ -192,7 +229,7 @@ void MainWindow::run_test_file(std::string test_filepath)
         {
             std::string outgoing_msg;
             bool should_send;
-            tie(outgoing_msg, should_send) = IRC_Client::build_outgoing_message(str, RUNNING);
+            tie(outgoing_msg, should_send) = this->build_outgoing_message(str, RUNNING);
 
             // push a message onto the queue to be sent by the socket thread
             if (should_send)

@@ -33,6 +33,24 @@ public:
     std::string next_message();
     void communicate_with_server(IRC_Client::TCPClientSocket* clientSocket);
     void run_test_file(std::string test_filepath);
+    std::string extract_channel_from_message(std::string msg);
+    std::string extract_message_contents(std::string msg);
+
+    std::tuple<std::string, bool> build_outgoing_message(std::string client_input, bool &running);
+    std::string list_command();
+    std::string join_command(std::string);
+    std::string quit_command();
+    std::string privmsg_command(std::string, bool &);
+    std::string help_command();
+    std::string ping_command();
+    std::string info_command();
+    std::string time_command();
+    std::string user_ip_command(std::string input, bool &should_send);
+    std::string version_command();
+    std::string users_command();
+    std::string kill_command(std::string input, bool&);
+    std::string kick_command(std::string, bool&);
+    std::string user_host_command(std::string input, bool &should_send);
 
     bool RUNNING;
     bool should_log;
@@ -40,6 +58,7 @@ public:
     std::string log_path;
     std::queue<std::string> message_queue;
     std::mutex message_queue_mutex;
+    std::map<std::string, std::vector<std::string>> channel_messages;
 
 private slots:
     void on_lineEdit_returnPressed();

@@ -33,7 +33,6 @@ SOURCES += \
 
 HEADERS += \
         mainwindow.h \
-        client_command_processor.h \
         client_globals.h \
         tcp_client_socket.h \
         utils/buffer.h \

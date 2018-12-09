@@ -225,10 +225,9 @@ namespace IRC_Server
 
     void join_new_channel(std::shared_ptr<IRC_Server::TCP_User_Socket> clientSocket, std::string channel_name, std::string user)
     {
-        // std::lock_guard<std::mutex> guard(channels_mutex);
-        // remove user from current channel
+        // keep user in channel so it's like they've "subscribed" to it. Client will sort out what to display in the GUI
         std::string curChan = users.find(user)->second.current_channel;
-        channels.find(curChan)->second.erase(user);
+        //channels.find(curChan)->second.erase(user);
 
         print_and_log("[SERVER] " + user + " left #" + curChan + " and joined #" + channel_name );
 
@@ -378,7 +377,7 @@ namespace IRC_Server
         std::string cur_channel = users.find(nick)->second.current_channel;
         print_and_log("[SERVER] " + nick + " on #" + cur_channel + " - " + message );
 
-        std::string to_send = nick + " on #" + cur_channel + ": " + message + "\n";
+        std::string to_send = "[CHANNEL]" + cur_channel + "[/CHANNEL]" + nick + ": " + message + "\n";
         send_to_channel(nick, to_send, cur_channel);
     }
 
