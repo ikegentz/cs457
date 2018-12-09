@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     this->communicator_running = true;
     log_path = IRC_Client::DEFAULT_LOGPATH;
     this->channel_messages["general"] = std::vector<std::string>();
+
+    ui->channelsList->addItem("general");
 }
 
 MainWindow::~MainWindow()
@@ -186,7 +188,7 @@ void MainWindow::communicate_with_server(IRC_Client::TCPClientSocket* clientSock
             // add server command to display, regardless of current channel
             // this '!' is decieving, but remember that this returns an index, and any non-zero is true
             if(!msg.find("[SERVER]"))
-                std::cout << "TODO -- Display server message regardless of channel" << std::endl;
+                std::cerr << "TODO -- Display server message regardless of channel" << std::endl;
 
 
             std::string channel_name = this->extract_channel_from_message(msg);

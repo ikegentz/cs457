@@ -5,8 +5,7 @@
 #include "mainwindow.h"
 #include "client_globals.h"
 #include "string_ops.h"
-
-
+#include "ui_mainwindow.h"
 
 std::tuple<std::string, bool> MainWindow::build_outgoing_message(std::string client_input, bool& running)
 {
@@ -118,13 +117,12 @@ std::string MainWindow::join_command(std::string input)
 {
     std::vector<std::string> tokens;
     Utils::tokenize_line(input, tokens);
+
     // add new channel queue
-    std::cout << (this->channel_messages.find(tokens[1]) == this->channel_messages.end()) << std::endl;
     if(this->channel_messages.find(tokens[1]) == this->channel_messages.end())
     {
         this->channel_messages[tokens[1]] = std::vector<std::string>();
-        std::cout << (this->channel_messages.find(tokens[1]) == this->channel_messages.end()) << std::endl;
-        std::cout << "MAKING NEW CHANNEL BUFFER: " << tokens[1] << std::endl;
+        ui->channelsList->addItem(tokens[1].c_str());
     }
 
     return "JOIN " + tokens[1];
