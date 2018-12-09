@@ -4,7 +4,7 @@
 
 #include "client_command_processor.h"
 #include "client_globals.h"
-#include "../utils/string_ops.h"
+#include "string_ops.h"
 
 
 

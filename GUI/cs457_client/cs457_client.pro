@@ -28,7 +28,8 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         tcp_client_socket.cpp \
-        buffer.cpp
+        buffer.cpp \
+        client_command_processor.cpp
 
 HEADERS += \
         mainwindow.h \
