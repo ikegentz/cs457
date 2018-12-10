@@ -2,11 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListWidgetItem>
 #include <mutex>
 #include <queue>
 #include <fstream>
 #include <unistd.h>
 #include <thread>
+#include <QTimer>
 
 
 #include "client_globals.h"
@@ -35,6 +37,7 @@ public:
     void run_test_file(std::string test_filepath);
     std::string extract_channel_from_message(std::string msg);
     std::string extract_message_contents(std::string msg);
+    void messagesUpdated();
 
     std::tuple<std::string, bool> build_outgoing_message(std::string client_input, bool &running);
     std::string list_command();
@@ -56,14 +59,20 @@ public:
     bool should_log;
     bool communicator_running;
     std::string log_path;
+    std::string current_channel;
     std::queue<std::string> message_queue;
     std::mutex message_queue_mutex;
     std::map<std::string, std::vector<std::string>> channel_messages;
 
 private slots:
-    void on_lineEdit_returnPressed();
-
     void on_inputBox_returnPressed();
+
+    void on_channelsList_itemDoubleClicked(QListWidgetItem *item);
+
+    void display_current_channel();
+
+signals:
+    void messages_updated();
 
 private:
     Ui::MainWindow *ui;

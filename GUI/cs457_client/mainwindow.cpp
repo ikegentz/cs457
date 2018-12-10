@@ -16,6 +16,10 @@ MainWindow::MainWindow(QWidget *parent) :
     this->channel_messages["general"] = std::vector<std::string>();
 
     ui->channelsList->addItem("general");
+    this->current_channel = "general";
+
+    //QObject::connect(this, SIGNAL(messagesUpdated()), this, SLOT(display_current_channel()));
+
 }
 
 MainWindow::~MainWindow()
@@ -38,9 +42,18 @@ void MainWindow::on_inputBox_returnPressed()
     {
         std::lock_guard <std::mutex> guard(this->message_queue_mutex);
         this->message_queue.push(outgoing_msg);
+
+
+        std::vector<std::string> cur_messages = this->channel_messages.find(this->current_channel)->second;
+        std::cout << "ADDING MESSAGE"  << std::endl;
+
+        cur_messages.push_back("ME: " + outgoing_msg);
+        this->channel_messages[this->current_channel] = cur_messages;
+        this->display_current_channel();
+
+        //emit this->messagesUpdated();
         log_only(outgoing_msg);
     }
-
 
     ui->inputBox->clear();
 }
@@ -199,8 +212,11 @@ void MainWindow::communicate_with_server(IRC_Client::TCPClientSocket* clientSock
             if(this->channel_messages.find(channel_name) != this->channel_messages.end())
             {
                 std::vector<std::string> cur_messages = this->channel_messages.find(channel_name)->second;
+                std::cout << "ADDING MESSAGE"  << std::endl;
                 cur_messages.push_back(this->extract_message_contents(msg));
                 this->channel_messages[channel_name] = cur_messages;
+
+                //this->display_current_channel();
             }
         }
 
@@ -247,3 +263,28 @@ void MainWindow::run_test_file(std::string test_filepath)
     }while(RUNNING);
     communicator_running = false;
 }
+
+void MainWindow::on_channelsList_itemDoubleClicked(QListWidgetItem *item)
+{
+    std::string channel_name  = item->text().toStdString();
+    this->current_channel = channel_name;
+}
+
+void MainWindow::display_current_channel()
+{
+    std::cout << "DISPLAYING CHANNEL: " << this->current_channel << std::endl;
+    std::vector<std::string> message_list = this->channel_messages.find(this->current_channel)->second;
+
+    std::string display;
+
+    for(std::string cur : message_list)
+    {
+        std::cout << "CUR: " << cur << std::endl;
+        display += cur + "\n";
+    }
+
+    std::cout << display << std::endl;
+    ui->messageDisplay->clear();
+    ui->messageDisplay->setPlainText(QString::fromStdString(display));
+}
+

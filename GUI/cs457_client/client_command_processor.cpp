@@ -125,6 +125,8 @@ std::string MainWindow::join_command(std::string input)
         ui->channelsList->addItem(tokens[1].c_str());
     }
 
+    this->current_channel = tokens[1];
+
     return "JOIN " + tokens[1];
 }
 

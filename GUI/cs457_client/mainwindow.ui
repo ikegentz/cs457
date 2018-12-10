@@ -38,11 +38,18 @@
      </property>
      <item>
       <layout class="QVBoxLayout" name="channelsAndUsersLayout">
+       <property name="sizeConstraint">
+        <enum>QLayout::SetMaximumSize</enum>
+       </property>
        <item>
-        <widget class="QListWidget" name="channelsList"/>
-       </item>
-       <item>
-        <widget class="QListWidget" name="listWidget_2"/>
+        <widget class="QListWidget" name="channelsList">
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -81,7 +88,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="inputBox"/>
+        <widget class="QLineEdit" name="inputBox">
+         <property name="placeholderText">
+          <string>Type messages here...</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
