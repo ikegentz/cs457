@@ -21,8 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(display_current_channel()));
     timer->start(500);
-    //QObject::connect(this, SIGNAL(messagesUpdated()), this, SLOT(display_current_channel()));
-
 }
 
 MainWindow::~MainWindow()
@@ -46,9 +44,7 @@ void MainWindow::on_inputBox_returnPressed()
         std::lock_guard <std::mutex> guard(this->message_queue_mutex);
         this->message_queue.push(outgoing_msg);
 
-
         std::vector<std::string> cur_messages = this->channel_messages.find(this->current_channel)->second;
-        std::cout << "ADDING MESSAGE"  << std::endl;
 
         cur_messages.push_back("ME: " + outgoing_msg);
         this->channel_messages[this->current_channel] = cur_messages;
@@ -56,6 +52,14 @@ void MainWindow::on_inputBox_returnPressed()
 
         //emit this->messagesUpdated();
         log_only(outgoing_msg);
+    }
+    else
+    {
+        std::vector<std::string> cur_messages = this->channel_messages.find(this->current_channel)->second;
+
+        cur_messages.push_back(outgoing_msg);
+        this->channel_messages[this->current_channel] = cur_messages;
+        this->display_current_channel();
     }
 
     ui->inputBox->clear();
@@ -185,6 +189,23 @@ std::string MainWindow::extract_message_contents(std::string msg)
     return msg.substr(msg.find(end) + end.size());
 }
 
+std::string MainWindow::extract_user_from_privmsg(std::string msg)
+{
+    std::string start = "[PRIVMSG]";
+    std::string end = "[/PRIVMSG]";
+
+    return msg.substr(start.size(), msg.find(end) - end.size() + 1);
+
+}
+
+std::string MainWindow::extract_message_from_privmsg(std::string msg)
+{
+    std::string start = "[PRIVMSG]";
+    std::string end = "[/PRIVMSG]";
+
+    return msg.substr(msg.find(end));
+}
+
 void MainWindow::communicate_with_server(IRC_Client::TCPClientSocket* clientSocket)
 {
     // process any messages that haven't been sent yet
@@ -204,22 +225,41 @@ void MainWindow::communicate_with_server(IRC_Client::TCPClientSocket* clientSock
             // add server command to display, regardless of current channel
             // this '!' is decieving, but remember that this returns an index, and any non-zero is true
             if(!msg.find("[SERVER]"))
-                std::cerr << "TODO -- Display server message regardless of channel" << std::endl;
-
-
-            std::string channel_name = this->extract_channel_from_message(msg);
-            if(this->channel_messages.find(channel_name) == this->channel_messages.end())
-                log_only("Not subscribed to channel" + channel_name + ". Skipping message");
-
-            // add the message to our queue of messages
-            if(this->channel_messages.find(channel_name) != this->channel_messages.end())
             {
-                std::vector<std::string> cur_messages = this->channel_messages.find(channel_name)->second;
-                std::cout << "ADDING MESSAGE"  << std::endl;
-                cur_messages.push_back(this->extract_message_contents(msg));
-                this->channel_messages[channel_name] = cur_messages;
+                for(auto it = this->channel_messages.begin(); it != this->channel_messages.end(); ++it)
+                {
+                    std::vector<std::string> cur_messages = it->second;
+                    cur_messages.push_back(this->extract_message_contents(msg));
+                    this->channel_messages[it->first] = cur_messages;
+                }
+            }
+            else if(!msg.find("[PRIVMSG]"))
+            {
+                std::string user = this->extract_user_from_privmsg(msg) + this->username;
+                // add new channel queue
+                if(this->channel_messages.find(user) == this->channel_messages.end())
+                {
+                    this->channel_messages[user] = std::vector<std::string>();
+                    ui->channelsList->addItem(user.c_str());
+                }
 
-                //this->display_current_channel();
+                std::vector<std::string> cur_messages = this->channel_messages[user];
+                cur_messages.push_back(this->extract_message_from_privmsg(msg));
+                this->channel_messages[user] = cur_messages;
+            }
+            else
+            {
+                std::string channel_name = this->extract_channel_from_message(msg);
+                if(this->channel_messages.find(channel_name) == this->channel_messages.end())
+                    log_only("Not subscribed to channel" + channel_name + ". Skipping message");
+
+                // add the message to our queue of messages
+                if(this->channel_messages.find(channel_name) != this->channel_messages.end())
+                {
+                    std::vector<std::string> cur_messages = this->channel_messages.find(channel_name)->second;
+                    cur_messages.push_back(this->extract_message_contents(msg));
+                    this->channel_messages[channel_name] = cur_messages;
+                }
             }
         }
 
@@ -271,6 +311,10 @@ void MainWindow::on_channelsList_itemDoubleClicked(QListWidgetItem *item)
 {
     std::string channel_name  = item->text().toStdString();
     this->current_channel = channel_name;
+    std::string outgoing;
+    bool throwAway;
+    std::tie(outgoing, throwAway) = this->build_outgoing_message("/join " + channel_name, this->RUNNING);
+    this->message_queue.push(outgoing);
 }
 
 void MainWindow::display_current_channel()
@@ -284,5 +328,8 @@ void MainWindow::display_current_channel()
 
     ui->messageDisplay->clear();
     ui->messageDisplay->setPlainText(QString::fromStdString(display));
+    ui->messageDisplay->verticalScrollBar()->setValue(ui->messageDisplay->verticalScrollBar()->maximum());
+
 }
+
 

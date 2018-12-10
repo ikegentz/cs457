@@ -188,6 +188,7 @@ int main(int argc, char *argv[])
     // bring up the GUI
     else
     {
+        w.username = nickname;
         w.show();
         guiRet = a.exec();
     }

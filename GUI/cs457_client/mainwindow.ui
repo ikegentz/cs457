@@ -49,6 +49,9 @@
            <height>16777215</height>
           </size>
          </property>
+         <property name="viewMode">
+          <enum>QListView::ListMode</enum>
+         </property>
         </widget>
        </item>
       </layout>
@@ -82,8 +85,20 @@
        </property>
        <item>
         <widget class="QPlainTextEdit" name="messageDisplay">
+         <property name="mouseTracking">
+          <bool>true</bool>
+         </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QAbstractScrollArea::AdjustIgnored</enum>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>Messages will appear here...</string>
          </property>
         </widget>
        </item>

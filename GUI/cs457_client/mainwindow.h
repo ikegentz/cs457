@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QListWidgetItem>
+#include <QScrollBar>
 #include <mutex>
 #include <queue>
 #include <fstream>
@@ -38,6 +39,8 @@ public:
     std::string extract_channel_from_message(std::string msg);
     std::string extract_message_contents(std::string msg);
     void messagesUpdated();
+    std::string extract_user_from_privmsg(std::string msg);
+    std::string extract_message_from_privmsg(std::string msg);
 
     std::tuple<std::string, bool> build_outgoing_message(std::string client_input, bool &running);
     std::string list_command();
@@ -59,6 +62,7 @@ public:
     bool should_log;
     bool communicator_running;
     std::string log_path;
+    std::string username;
     std::string current_channel;
     std::queue<std::string> message_queue;
     std::mutex message_queue_mutex;
@@ -71,6 +75,7 @@ private slots:
     void on_channelsList_itemDoubleClicked(QListWidgetItem *item);
 
     void display_current_channel();
+
 
 private:
     Ui::MainWindow *ui;

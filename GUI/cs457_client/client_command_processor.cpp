@@ -17,8 +17,6 @@ std::tuple<std::string, bool> MainWindow::build_outgoing_message(std::string cli
         std::string command = client_input.substr(1, client_input.find(" "));
         bool should_send = true;
 
-        std::cout << "COMMAND " << command << std::endl;
-
         if(command.find("list") != std::string::npos)
         {
             response = list_command();
@@ -27,7 +25,7 @@ std::tuple<std::string, bool> MainWindow::build_outgoing_message(std::string cli
         {
             if(client_input.size() < 6)
             {
-                std::cout << "[CLIENT] Provide an channel for the JOIN command" << std::endl;
+                response = "[CLIENT] Provide an channel for the JOIN command\n";
                 should_send = false;
                 response = "";
             }
@@ -46,7 +44,7 @@ std::tuple<std::string, bool> MainWindow::build_outgoing_message(std::string cli
         }
         else if(command.find("help") != std::string::npos)
         {
-            std::cout << help_command() << std::endl;
+            response = help_command();
             should_send = false;
         }
         else if(command.find("ping") != std::string::npos)
@@ -92,7 +90,7 @@ std::tuple<std::string, bool> MainWindow::build_outgoing_message(std::string cli
         }
         else
         {
-            std::cout << "[CLIENT] Unrecognized command '" + command + "'" << std::endl;
+            response = "[CLIENT] Unrecognized command '" + command + "'\n";
             should_send = false;
         }
 
@@ -144,15 +142,21 @@ std::string MainWindow::privmsg_command(std::string input, bool& should_send)
 
     if(tokens.size() < 3)
     {
-        std::cout << "[CLIENT] USAGE: /PRIVMSG <target> message\n" <<
-        "\tWhere <target> is either a username or a #channel" << std::endl;
         should_send = false;
-        return "";
+        return "[CLIENT] USAGE: /PRIVMSG <target> message\n\tWhere <target> is either a username or a #channel\n";
     }
 
     for(unsigned i = 1; i < tokens.size(); ++i)
         ret += " " + tokens[i];
     ret += "\n";
+
+    if(this->channel_messages.find(this->username + tokens[1]) == this->channel_messages.end())
+    {
+        this->channel_messages[this->username + tokens[1]] = std::vector<std::string>();
+        ui->channelsList->addItem(std::string(this->username + tokens[1]).c_str());
+    }
+
+    this->current_channel = std::string(this->username + tokens[1]);
 
     return ret;
 }
@@ -174,10 +178,10 @@ std::string MainWindow::user_ip_command(std::string input, bool& should_send)
 
     if(tokens.size() != 2)
     {
-        std::cout << "[CLIENT] Specify a user for this command" << std::endl;
-        std::cout << "\t/USERIP <user>" << std::endl;
+        std::string ret = "[CLIENT] Specify a user for this command\n";
+        ret += "\t/USERIP <user>\n";
         should_send = false;
-        return "";
+        return ret;
     }
 
     should_send = true;
@@ -191,10 +195,10 @@ std::string MainWindow::user_host_command(std::string input, bool& should_send)
 
     if(tokens.size() != 2)
     {
-        std::cout << "[CLIENT] Specify a user for this command" << std::endl;
-        std::cout << "\t/USERHOST <user>" << std::endl;
+        std::string ret = "[CLIENT] Specify a user for this command\n";
+        ret += "\t/USERHOST <user>";
         should_send = false;
-        return "";
+        return ret;
     }
 
     should_send = true;
@@ -218,10 +222,10 @@ std::string MainWindow::kill_command(std::string input, bool& should_send)
 
     if(tokens.size() != 2)
     {
-        std::cout << "[CLIENT] Specify a user for this command" << std::endl;
-        std::cout << "\t/KILL <user>" << std::endl;
+        std::string ret = "[CLIENT] Specify a user for this command\n";
+        ret += "\t/KILL <user>\n";
         should_send = false;
-        return "";
+        return ret;
     }
 
     should_send = true;
@@ -235,10 +239,10 @@ std::string MainWindow::kick_command(std::string input, bool& should_send)
 
     if(tokens.size() != 2)
     {
-        std::cout << "[CLIENT] Specify a user for this command" << std::endl;
-        std::cout << "\t/KICK <user>" << std::endl;
+        std::string ret  = "[CLIENT] Specify a user for this command\n";
+        ret += "\t/KICK <user>\n";
         should_send = false;
-        return "";
+        return ret;
     }
 
     should_send = true;

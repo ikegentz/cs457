@@ -237,7 +237,8 @@ namespace IRC_Server
         //set users new channel
         users.find(user)->second.current_channel = channel_name;
 
-        std::string s = "[SERVER] You left #" + curChan + " and joined #" + channel_name + "\n";
+//        std::string s = "[SERVER] You left #" + curChan + " and joined #" + channel_name + "\n";
+        std::string s = "";
 
         thread sendThread(&IRC_Server::TCP_User_Socket::sendString, clientSocket.get(), s, true);
         sendThread.join();
@@ -403,7 +404,7 @@ namespace IRC_Server
         std::vector<std::string> tokens;
         Utils::tokenize_line(message, tokens);
 
-        std::string to_send = sending_user + " on #" + users.find(sending_user)->second.current_channel + ": ";
+        std::string to_send = "[PRIVMSG]" + sending_user + "[/PRIVMSG]: ";
         for(unsigned i = 2; i < tokens.size(); ++i)
             to_send += tokens[i] + " ";
         to_send += "\n";
