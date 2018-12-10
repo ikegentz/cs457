@@ -63,6 +63,7 @@ public:
     std::queue<std::string> message_queue;
     std::mutex message_queue_mutex;
     std::map<std::string, std::vector<std::string>> channel_messages;
+    QTimer* timer;
 
 private slots:
     void on_inputBox_returnPressed();
@@ -70,9 +71,6 @@ private slots:
     void on_channelsList_itemDoubleClicked(QListWidgetItem *item);
 
     void display_current_channel();
-
-signals:
-    void messages_updated();
 
 private:
     Ui::MainWindow *ui;

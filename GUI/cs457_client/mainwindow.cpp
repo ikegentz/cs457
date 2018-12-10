@@ -18,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->channelsList->addItem("general");
     this->current_channel = "general";
 
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(display_current_channel()));
+    timer->start(500);
     //QObject::connect(this, SIGNAL(messagesUpdated()), this, SLOT(display_current_channel()));
 
 }
@@ -272,18 +275,13 @@ void MainWindow::on_channelsList_itemDoubleClicked(QListWidgetItem *item)
 
 void MainWindow::display_current_channel()
 {
-    std::cout << "DISPLAYING CHANNEL: " << this->current_channel << std::endl;
     std::vector<std::string> message_list = this->channel_messages.find(this->current_channel)->second;
 
     std::string display;
 
     for(std::string cur : message_list)
-    {
-        std::cout << "CUR: " << cur << std::endl;
         display += cur + "\n";
-    }
 
-    std::cout << display << std::endl;
     ui->messageDisplay->clear();
     ui->messageDisplay->setPlainText(QString::fromStdString(display));
 }
