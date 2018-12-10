@@ -130,6 +130,7 @@ std::string MainWindow::join_command(std::string input)
 
 std::string MainWindow::quit_command()
 {
+    emit close();
     return "QUIT";
 }
 

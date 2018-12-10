@@ -332,4 +332,11 @@ void MainWindow::display_current_channel()
 
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    std::string outgoing;
+    bool throwAway;
+    std::tie(outgoing, throwAway) = this->build_outgoing_message("/quit", this->RUNNING);
+}
+
 

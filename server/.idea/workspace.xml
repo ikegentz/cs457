@@ -9,14 +9,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a9533f36-29e3-4f30-96f1-b3da690ac73a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../GUI/cs457_client/client_command_processor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/cs457_client/client_command_processor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/cs457_client/mainwindow.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/cs457_client/mainwindow.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/cs457_client/mainwindow.h" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/cs457_client/mainwindow.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../GUI/cs457_client/mainwindow.ui" beforeDir="false" afterPath="$PROJECT_DIR$/../GUI/cs457_client/mainwindow.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
-    </list>
+    <list default="true" id="a9533f36-29e3-4f30-96f1-b3da690ac73a" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,8 +60,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="261">
-              <caret line="239" column="89" lean-forward="true" selection-start-line="239" selection-start-column="89" selection-end-line="239" selection-end-column="89" />
+            <state relative-caret-position="441">
+              <caret line="251" column="38" lean-forward="true" selection-start-line="251" selection-start-column="38" selection-end-line="251" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -158,12 +151,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1544390050955</updated>
-      <workItem from="1544390052210" duration="5782000" />
+      <workItem from="1544390052210" duration="6773000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5782000" />
+    <option name="totallyTimeSpent" value="6773000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="139" width="1920" height="1053" extended-state="6" />
@@ -206,8 +199,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="261">
-          <caret line="239" column="89" lean-forward="true" selection-start-line="239" selection-start-column="89" selection-end-line="239" selection-end-column="89" />
+        <state relative-caret-position="441">
+          <caret line="251" column="38" lean-forward="true" selection-start-line="251" selection-start-column="38" selection-end-line="251" selection-end-column="38" />
         </state>
       </provider>
     </entry>

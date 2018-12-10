@@ -10,6 +10,7 @@
 #include <unistd.h>
 #include <thread>
 #include <QTimer>
+#include <QCloseEvent>
 
 
 #include "client_globals.h"
@@ -76,6 +77,7 @@ private slots:
 
     void display_current_channel();
 
+    void closeEvent(QCloseEvent *event);
 
 private:
     Ui::MainWindow *ui;
