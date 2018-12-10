@@ -607,3 +607,9 @@ USERS
 
 QUIT
 [CLIENT] Terminated session!
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port
+[CLIENT] Starting the client...
+[CLIENT] Connecting to server 127.0.0.1 on port 1997
+[CLIENT] Couldn't connect to the server. Check hostname/IP and port

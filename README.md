@@ -23,11 +23,13 @@ Use the `-H` option to see command line args you can pass to it
 - When the server first starts you can see it display a list of commands you can type directly into the terminal to control the server. Commands should be prepended with a `/`
 
 
-# Client
+# Client-GUI
+*note I left my old client in here under the 'client' directory for history's sake, but it will have some undefined behavior with this version of the server*
 
 **Building**
- - Navigate to the `client` directory and type `make`. This will create an executable called `client` that can be invoked
- - Use `./client -H` to see command line arguments you can pass to it
+ - Navigate to the `GUI` directory and type `qmake`. This will run QT and spit out makefiles that can be used to buld the project
+ - Now simply type make and the project will be compiled, creating a `cs457_client` executable
+ - Use `./cs457_client -H` to see command line arguments you can pass to it
 
 **Other Info**
  - I didn't quite get through all 80% of the commands, but I got the essential ones plus a few niceties. You can type `/help` to see what IRC commands can be typed into the client. If no `/` is specified, the input will be considered a general message that will be sent to the server and then relayed to the channel you are currently in
@@ -44,19 +46,9 @@ Use the `-H` option to see command line args you can pass to it
  - `/users` will list all the users currentlyu logged in
  - `/version` will get the server's version
  - The `/user` command is similar to the `/connect` command because it is invoked automatically to pass along the login information
- - The main thing I will be adding for part 2 are user permissions. Everything works well right now, however there are not channel operators or user modes, so any user can kick any other user. Users can also join any other channels they wish, or send private messages to whomever they wish.
 - The client will log things by default to `client.log`
 - You can pass in a custom `client.conf` file to override default options if you don't want to keep typing command line args each time
 - Command line args will over-rule config file options
-
-**Testing**
-Testing has also been implemented!! You can simply type a bunch of commands/messages into a txt file (1 command/message per line) and then use the `-t` flag on `./client` and pass in your testing file. This will have the client read each of your lines and either send it as a message (if it's a message) or run the command (which you should specify as if you were running the client with a `/`). Every 4 seconds, it will read a new line, to simulate a user who types a message every couple seconds
-
-I have 2 pre-written testing files you can use!! One is called `bob.test` and the other is `tom.test`. This will emulate a conversation between two users, compelte with switching channels when they find a common interest
- - To run this test, open 2 terminals
- - In each terminal, navigate to the client folder and make sure the client has been built using `make`
- - Now in the first terminal, type `./client -t bob.test -L bob.log -u bob` and wait 2 seconds...
- - Now in the next terminal, type `./client -t tom.test -L tom.log -u tom`. Tom will now 'reply' to bob and have a conversation with him!
- - While they are conversing, you can see their chats being sent to the server, as if 2 people were sitting there typing things
- - You can fire up another terminal if you wish and log in as another user, to watch bob and tom's conversation (they sadly won't reply to you though, since their conversation is pre-scripted :)
+- You can switch between channels by double clicking on them in the left pane
+- Send messages by typing in the bottom-right box and hitting `enter`
 
